@@ -17,10 +17,19 @@
       crossorigin="anonymous"
     />
 
+    <link
+      rel="icon"
+      href="https://www.pngall.com/wp-content/uploads/2016/06/Doctor-Symbol-Caduceus-Free-Download-PNG.png"
+    />
     <title>{% block title %}{% endblock %} Mapa zdraví</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg p-3 navbar-dark bg-dark text-light">
+      <img
+        src="https://www.citypng.com/public/uploads/small/11639360387mkrjjyvpivdj0abphk62tbisvxfntvdhb93bv78rpd5gtolbrkakfetjkhg2ol21mrlfxibrweiefg0h66pnxqm0q1yrso4bgzvc.png"
+        width="30"
+        height="20"
+      />
       <a class="navbar-brand" href="{{ url_for('views.home') }}">Mapa zdraví</a>
       <button
         class="navbar-toggler"
@@ -33,16 +42,36 @@
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
           <a class="nav-item nav-link" id="home" href="/">Hlavní stránka</a>
+          <a class="nav-item nav-link" id="about" href="/mapa">Mapa</a>
+          <a class="nav-item nav-link" id="about" href="/statistiky"
+            >Statistiky</a
+          >
           <a class="nav-item nav-link" id="about" href="/about">O projektu</a>
-          <!-- TODO others-->
         </div>
-        </ul>
       </div>
     </nav>
 
-    <br/>
+    <br />
 
     <div class="containter">{% block content %} {% endblock %}</div>
+
+    <div class="footer p-3 bg-dark mt-4 text-light">
+      <div class="row align-items-center">
+        <div class="col text-center text-lg-left">
+          <p class="mb-1">TODO footer</p>
+
+          <!-- <p class="mb-1">
+            Vydavatel: ČVUT, Fakulta informačních technologií, Praha ve
+            spolupráci s laboratoří OpenDataLab.<br />
+          </p>
+          <p class="mb-0 font-italic">
+            Provozovatel neodpovídá za správnost a úplnost zpracovaných dat a
+            informací, ani tato neověřuje a zříká se zodpovědnosti za veškeré
+            škody a újmy, které by použitím těchto dat mohly vzniknout.
+          </p> -->
+        </div>
+      </div>
+    </div>
 
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
