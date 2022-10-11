@@ -26,5 +26,3 @@ def map():
 @views.route('/statistiky')
 def statistics():
     return render_template('statistics.html')
-
-# TODO statistiky a vizualizace
