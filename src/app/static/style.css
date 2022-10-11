@@ -1,0 +1,18 @@
+body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+img.footer {
+    width:160px;
+    height:100px;
+    max-width:50%;
+    max-height:50%;
+  }
+
+
+footer{
+    margin-top: auto;
+}

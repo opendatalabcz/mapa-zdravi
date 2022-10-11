@@ -7,9 +7,20 @@
 
     <link
       rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
     />
     <link
       rel="stylesheet"
@@ -23,7 +34,9 @@
     />
     <title>{% block title %}{% endblock %} Mapa zdraví</title>
   </head>
+
   <body>
+    <!-- HEADER -->
     <nav class="navbar navbar-expand-lg p-3 navbar-dark bg-dark text-light">
       <img
         src="https://www.citypng.com/public/uploads/small/11639360387mkrjjyvpivdj0abphk62tbisvxfntvdhb93bv78rpd5gtolbrkakfetjkhg2ol21mrlfxibrweiefg0h66pnxqm0q1yrso4bgzvc.png"
@@ -42,37 +55,92 @@
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
           <a class="nav-item nav-link" id="home" href="/">Hlavní stránka</a>
-          <a class="nav-item nav-link" id="about" href="/mapa">Mapa</a>
-          <a class="nav-item nav-link" id="about" href="/statistiky"
+          <a class="nav-item nav-link" id="mapa" href="/mapa">Mapa</a>
+          <a class="nav-item nav-link" id="statistiky" href="/statistiky"
             >Statistiky</a
+          >
+          <a class="nav-item nav-link" id="lekari" href="/lekari"
+            >Seznam lékařů</a
           >
           <a class="nav-item nav-link" id="about" href="/about">O projektu</a>
         </div>
       </div>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="https://twitter.com/ocko_bot"
+            target="_blank"
+          >
+            <i class="fab fa-twitter"></i>
+            Twitter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="https://github.com/msusicky/ockovani-covid"
+            target="_blank"
+          >
+            <i class="fab fa-github"></i>
+            GitHub
+          </a>
+        </li>
+      </ul>
     </nav>
+    <!-- HEADER END -->
 
-    <br />
-
+    <!-- MAIN PART -->
     <div class="containter">{% block content %} {% endblock %}</div>
+    <!-- MAIN PART END -->
 
-    <div class="footer p-3 bg-dark mt-4 text-light">
-      <div class="row align-items-center">
-        <div class="col text-center text-lg-left">
-          <p class="mb-1">TODO footer</p>
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer p-3 bg-dark mt-4 text-light">
+        <div class="row align-items-center">
+          <div class="col text-center text-lg-left">
+            <p class="mb-1">TODO footer, kontakt atd.</p>
 
-          <!-- <p class="mb-1">
-            Vydavatel: ČVUT, Fakulta informačních technologií, Praha ve
-            spolupráci s laboratoří OpenDataLab.<br />
-          </p>
-          <p class="mb-0 font-italic">
-            Provozovatel neodpovídá za správnost a úplnost zpracovaných dat a
-            informací, ani tato neověřuje a zříká se zodpovědnosti za veškeré
-            škody a újmy, které by použitím těchto dat mohly vzniknout.
-          </p> -->
+            <p class="mb-1">
+              <!-- Vydavatel: ČVUT, Fakulta informačních technologií, Praha ve
+            spolupráci s laboratoří OpenDataLab.<br /> -->
+              Garček Jan,
+              <i>Dostupnost zdravotnické péče v České republice</i> [online].
+              Diplomová práce. Praha: ČVUT, Fakulta informačních technologií &
+              OpenDataLab, 2022. [cit. TBD] Dostupné z TBA.
+            </p>
+
+            <!-- <p class="mb-0 font-italic">
+              Provozovatel neodpovídá za správnost a úplnost zpracovaných dat a
+              informací, ani tato neověřuje a zříká se zodpovědnosti za veškeré
+              škody a újmy, které by použitím těchto dat mohly vzniknout.
+            </p> -->
+          </div>
+          <div class="col-lg-auto text-center mt-3 mt-lg-0">
+            <a href="https://fit.cvut.cz/" target="_blank">
+              <img
+                class="footer"
+                src="{{ url_for('static',filename='img/fit_cvut.svg') }}"
+              />
+            </a>
+            &nbsp;
+            <a href="https://opendatalab.cz/" target="_blank">
+              <img
+                class="footer"
+                src="{{ url_for('static',filename='img/opendatalab.jpg') }}"
+              />
+            </a>
+            <img
+              class="footer"
+              src="{{ url_for('static',filename='img/opendatalab_no_background.png') }}"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </footer>
+    <!-- FOOTER END -->
 
+    <!-- SCRIPTS -->
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -92,5 +160,6 @@
       type="text/javascript"
       src="{{ url_for('static', filename='index.js') }}"
     ></script>
+    <!-- SCRIPTS END -->
   </body>
 </html>
