@@ -1,6 +1,37 @@
 {% extends "base.html" %} {% block title %}Mapa - {% endblock %} {% block
 content %}
-<div class="p-3">
-  <h1>Seznam lékařů</h1>
+<div class="container">
+  <div class="p-3">
+    <h1>Seznam lékařů</h1>
+    <!-- <ul class="list-group list-group-flush" id="doctors"> -->
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Jméno</th>
+          <th scope="col">Dummy</th>
+          <th scope="col">URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doctor in doctors %}
+
+        <tr>
+          <th class="tg-vhup">{{doctor.doctor_name}}</th>
+          <th class="tg-vhup">{{doctor.doctor_url}}xx</th>
+          <th>
+            <a href="{{doctor.doctor_url}}">Link</a>
+            <!-- <a
+                href="https://www.lkcr.cz/seznam-lekaru?filterId=NTE1OTI2ODE4OCwsRGVuaXNhLCxBZGFtY292w6E%3D&do[load]=1"
+                >Link</a
+              > -->
+          </th>
+        </tr>
+        <!-- <li class="list-group-item">{{doctor.doctor_name}}</li>
+    <li class="list-group-item"></li> -->
+        {% endfor %}
+      </tbody>
+    </table>
+    <!-- </ul> -->
+  </div>
 </div>
 {% endblock %}

@@ -13,9 +13,21 @@ def about():
     return render_template('about.html')
 
 
+class Docs():
+    def __init__(self, doctor_name, doctor_url) -> None:
+        self.doctor_url = doctor_url
+        self.doctor_name = doctor_name
+
+
 @views.route('/lekari')
 def doctors():
-    return render_template('doctors.html')
+
+    # TODO load doctors
+    doctors = []
+    for i in range(3):
+        doctors.append(Docs(f'name{i}', 'xxx'))
+
+    return render_template('doctors.html', doctors=doctors)
 
 
 @views.route('/mapa')
