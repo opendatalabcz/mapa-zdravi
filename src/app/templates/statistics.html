@@ -1,6 +1,19 @@
 {% extends "base.html" %} {% block title %}Statistiky - {% endblock %} {% block
 content %}
 <div class="p-3">
-  <h1 align="left">Statistiky</h1>
+  <h1>Statistiky</h1>
+
+  <!-- <div class="container"> -->
+  <div>
+    <h3>Průměrný věk lékařů podle specializací</h3>
+    <iframe
+      scrolling="no"
+      style="border: none"
+      src="{{url_for('static', filename='img/medical_specialty.html')}}"
+      width="100%"
+      id="setHeight"
+    >
+    </iframe>
+  </div>
 </div>
 {% endblock %}
