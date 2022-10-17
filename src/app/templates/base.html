@@ -32,6 +32,9 @@
       rel="icon"
       href="https://www.pngall.com/wp-content/uploads/2016/06/Doctor-Symbol-Caduceus-Free-Download-PNG.png"
     />
+
+    {% block head %}{% endblock %}
+
     <title>{% block title %}{% endblock %} Mapa zdraví</title>
   </head>
 
@@ -158,8 +161,15 @@
     ></script>
     <script
       type="text/javascript"
-      src="{{ url_for('static', filename='index.js') }}"
+      src="{{ url_for('static', filename='js/index.js') }}"
     ></script>
+    <script
+      src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
+      integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
+      crossorigin=""
+    ></script>
+
+    {% block scripts %} {% endblock %}
     <!-- SCRIPTS END -->
   </body>
 </html>
