@@ -1,6 +1,30 @@
-{% extends "base.html" %} {% block title %}Mapa - {% endblock %} {% block
-content %}
+{% extends "base.html" %} {% block head %}
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
+  integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
+  crossorigin=""
+/>
+
+{% endblock %} {% block title %}Mapa - {% endblock %} {% block content %}
 <div class="p-3">
   <h1>Mapa</h1>
+  <div
+    id="map"
+    class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
+  ></div>
 </div>
+
+{% endblock %} {% block scripts %}
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='geojson/regions.json') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='js/map.js') }}"
+></script>
+
 {% endblock %}
