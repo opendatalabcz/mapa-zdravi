@@ -1,4 +1,7 @@
 from flask import Blueprint, render_template
+from .models import DentistsAgeEstimate, Demographics, Students, NRPZS, Insurances, Doctors
+
+from . import db
 
 views = Blueprint('views', __name__)
 
@@ -16,33 +19,35 @@ def about():
 
     # TODO make up what to write here
 
-    return render_template('about.html')
+    import random
+    randomlist = random.sample(range(10, 30), 10)
 
+    print(randomlist)
 
-class TestDocs():
-    def __init__(self, doctor_name, doctor_url) -> None:
-        self.doctor_url = doctor_url
-        self.doctor_name = doctor_name
+    return render_template('about.html', data=randomlist)
 
 
 @views.route('/lekari')
 def doctors():
 
-    # TODO load doctors
+    table = Insurances
 
-    # Test
-    doctors = []
-    for i in range(300):
-        doctors.append(TestDocs(f'name{i}', 'xxx'))
+    # https://docs.sqlalchemy.org/en/14/orm/query.html
+    data = db.session.query(
+        table.ico, table.expertise_name)
 
-    return render_template('doctors.html', doctors=doctors)
+    # print(data.count())
+    return render_template('doctors.html', data=data)
 
 
 @views.route('/mapa')
 def map():
     # TODO map + prediction/history
     # TODO update and visualize them based on the input -> create GET, POST here
-    return render_template('map.html')
+    import random
+    randomlist = random.sample(range(10, 30), 10)
+
+    return render_template('map.html', dummy=randomlist)
 
 
 @views.route('/statistiky')
