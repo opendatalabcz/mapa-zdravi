@@ -1,7 +1,3 @@
-
-function randomIntFromInterval(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min)
-  }
 function getColor(d) {
     //  TODO update palette
     return d > 7  ? '#800026' :
@@ -71,11 +67,6 @@ attribution:
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
-// L.geoJson(regionData).addTo(map);
-// L.geoJson(regionData, {style: style}).addTo(map);
-
-
-
 geojson = L.geoJson(regionData, {
     style: style,
     onEachFeature: onEachFeature
@@ -105,7 +96,7 @@ var legend = L.control({position: 'bottomright'});
 legend.onAdd = function (map) {
 
     var div = L.DomUtil.create('div', 'info legend'),
-        grades = [1, 2, 3, 4, 5, 6, 7, 'Data nedostupná'],
+        grades = [1, 2, 3, 4, 5, 6, 7, 'Data nedostupná'], // name
         labels = [];
 
     for (var i = 0; i < grades.length; i++) {

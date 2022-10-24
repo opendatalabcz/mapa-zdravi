@@ -13,21 +13,19 @@ content %}
         </tr>
       </thead>
       <tbody>
-        {% for doctor in doctors %}
-
+        {% for row in data %}
         <tr>
-          <th class="tg-vhup">{{doctor.doctor_name}}</th>
-          <th class="tg-vhup">{{doctor.doctor_url}}xx</th>
-          <th>
-            <a href="{{doctor.doctor_url}}">Link</a>
+          <th class="tg-vhup">{{row}}</th>
+          <!-- <th class="tg-vhup">{{row.age_now_estimate}}</th>
+          <th class="tg-vhup">{{row.age_end_estimate}}</th>
+          <th class="tg-vhup">
+            <a href="{{row.date_end_estimate}}">{{row.date_end_estimate}}</a> -->
             <!-- <a
                 href="https://www.lkcr.cz/seznam-lekaru?filterId=NTE1OTI2ODE4OCwsRGVuaXNhLCxBZGFtY292w6E%3D&do[load]=1"
                 >Link</a
               > -->
           </th>
         </tr>
-        <!-- <li class="list-group-item">{{doctor.doctor_name}}</li>
-    <li class="list-group-item"></li> -->
         {% endfor %}
       </tbody>
     </table>
