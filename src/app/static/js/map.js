@@ -1,24 +1,41 @@
-function getColor(d) {
-    //  TODO update palette
-    return d > 7  ? '#800026' :
-           d > 6  ? '#BD0026' :
-           d > 5  ? '#E31A1C' :
-           d > 4  ? '#FC4E2A' :
-           d > 3  ? '#FD8D3C' :
-           d > 2  ? '#FEB24C' :
-           d > 1  ? '#FED976' :
+function getColorByName(n) {
+    var d = ratios[n]
+    // https://stackoverflow.com/questions/4161369/html-color-codes-red-to-yellow-to-green
+    return d < legend_labels[0]  ? '#FF0000' :
+           d < legend_labels[1]  ? '#FF4400' :
+           d < legend_labels[2]  ? '#FFAA00' :
+           d < legend_labels[3]  ? '#FFFF00' :
+           d < legend_labels[4]  ? '#AAFF00' :
+           d < legend_labels[5]  ? '#44FF00' :
+           d >= legend_labels[5]  ? '#00FF00' :
                     '#808080'; //'#FFEDA0';
+            // d <= legend_labels[7]  ? '#8B0000' :
+                    
+}
+function getColor(d) {
+    // https://stackoverflow.com/questions/4161369/html-color-codes-red-to-yellow-to-green
+    return d < legend_labels[0]  ? '#FF0000' :
+           d < legend_labels[1]  ? '#FF4400' :
+           d < legend_labels[2]  ? '#FFAA00' :
+           d < legend_labels[3]  ? '#FFFF00' :
+           d < legend_labels[4]  ? '#AAFF00' :
+           d < legend_labels[5]  ? '#44FF00' :
+           d >= legend_labels[5]  ? '#00FF00' :
+                    '#808080'; //'#FFEDA0';
+            // d <= legend_labels[7]  ? '#8B0000' :
                     
 }
 
+
+
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties.value),
+        fillColor: getColorByName(feature.properties.name),
         weight: 2,
         opacity: 1,
         color: 'white',
         dashArray: '3',
-        fillOpacity: 0.7
+        fillOpacity: 0.7,
     };
 }
 
@@ -43,8 +60,6 @@ function highlightFeature(e) {
 function resetHighlight(e) {
     geojson.resetStyle(e.target);
     info.update();
-
-
 }
 
 function zoomToFeature(e) {
@@ -55,7 +70,7 @@ function onEachFeature(feature, layer) {
     layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
-        click: zoomToFeature
+        // click: zoomToFeature
     });
 }
 
@@ -83,8 +98,10 @@ info.onAdd = function (map) {
 
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {
+
+    
     this._div.innerHTML = '<h4>Počet lékařů</h4>' +  (props ?
-        '<b>' + props.name + '</b><br/>Náhodně vygenerovaná hodnota: [' + props.value + ']'
+        '<b>' + normalized_names[props.name] + '</b><br/>' + ratios[props.name] + ' / 10 000 obyvatel ' 
         : 'Klikněte na okres');
 };
 
@@ -96,14 +113,29 @@ var legend = L.control({position: 'bottomright'});
 legend.onAdd = function (map) {
 
     var div = L.DomUtil.create('div', 'info legend'),
-        grades = [1, 2, 3, 4, 5, 6, 7, 'Data nedostupná'], // name
+        grades = legend_labels,
         labels = [];
 
-    for (var i = 0; i < grades.length; i++) {
+
         div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + ((grades[i+2]) || (!grades[i+1]) ? '<br>' : '+<br>');
+        '<i style="background:' + getColor(grades[0]-1) + '"></i> <' +
+        grades[0] +'<br>';
+
+    for (var i = 1; i < grades.length-1; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i]-1) + '"></i> ' +
+            grades[i-1] + '-' + (grades[i]-0.01) + '<br>';
     }
+
+    div.innerHTML +=
+    '<i style="background:' + getColor(grades[grades.length-2]) + '"></i> >' +
+    grades[grades.length-2] +'<br>';
+
+
+    div.innerHTML +=
+    '<i style="background:' + getColor(grades[grades.length-1]) + '"></i> ' +
+    grades[grades.length-1] + '<br>';
+
 
     return div;
 };

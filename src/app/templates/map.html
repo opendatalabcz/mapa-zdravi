@@ -8,8 +8,20 @@
 />
 
 {% endblock %} {% block title %}Mapa - {% endblock %} {% block content %}
+
 <div class="p-3">
   <h1>Mapa</h1>
+
+  <select name="medical_specialty" id="medical_specialty">
+    {% for med_spec in medical_specialties %}
+    <option value="{{med_spec}}">{{med_spec}}</option>
+    {% endfor %}
+    <option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+    <option value="mercedes">Mercedes</option>
+    <option value="audi">Audi</option>
+  </select>
+
   <div
     id="map"
     class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
@@ -23,8 +35,11 @@
   src="{{ url_for('static', filename='geojson/regions.json') }}"
 ></script>
 <script type="text/javascript">
-  var name ={{dummy|tojson}};
+  var legend_labels ={{legend_labels|safe}};
+  var ratios ={{ratios|safe}};
+  var normalized_names ={{normalized_names|safe}};
 </script>
+
 <script
   type="text/javascript"
   src="{{ url_for('static', filename='js/map.js') }}"
