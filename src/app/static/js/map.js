@@ -102,7 +102,7 @@ info.update = function (props) {
     
     this._div.innerHTML = '<h4>Počet lékařů</h4>' +  (props ?
         '<b>' + normalized_names[props.name] + '</b><br/>' + ratios[props.name] + ' / 10 000 obyvatel ' 
-        : 'Klikněte na okres');
+        : 'Najeďte kurzorem na okres');
 };
 
 info.addTo(map);

@@ -21,13 +21,50 @@
     <option value="mercedes">Mercedes</option>
     <option value="audi">Audi</option>
   </select>
-
   <div
     id="map"
     class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
   ></div>
+  <div class="p-3 container">
+    <table class="table table-hover item-list table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Top 5 okresů</th>
+          <th scope="col">Počet doktorů ( / 10 000 obyv)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i, row in top5.iterrows() %}
+        <tr>
+          <th class="tg-vhup">{{i+1}}</th>
+          <th class="tg-vhup">{{row['district']}}</th>
+          <th class="tg-vhup">{{row['ratio']}}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br />
+    <table class="table table-hover item-list table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Nejhorších 5 okresů</th>
+          <th scope="col">Počet doktorů ( / 10 000 obyv)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i, row in worst5.iterrows() %}
+        <tr>
+          <th class="tg-vhup">{{i+1}}</th>
+          <th class="tg-vhup">{{row['district']}}</th>
+          <th class="tg-vhup">{{row['ratio']}}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
-
 {% endblock %} {% block scripts %}
 
 <script
