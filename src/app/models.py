@@ -178,3 +178,6 @@ class Doctors(db.Model):
     workplace_url = db.Column(db.Unicode(100))    # object
     IC = db.Column(db.Unicode(100))   # object
     area = db.Column(db.Unicode(100))     # object
+
+    district = db.Column(db.Unicode(100))
+    nuts = db.Column(db.String(10))
