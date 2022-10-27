@@ -8,7 +8,7 @@ function getColorByName(n) {
            d < legend_labels[4]  ? '#AAFF00' :
            d < legend_labels[5]  ? '#44FF00' :
            d >= legend_labels[5]  ? '#00FF00' :
-                    '#808080'; //'#FFEDA0';
+                    '#d3d3d3';
             // d <= legend_labels[7]  ? '#8B0000' :
                     
 }
@@ -21,7 +21,7 @@ function getColor(d) {
            d < legend_labels[4]  ? '#AAFF00' :
            d < legend_labels[5]  ? '#44FF00' :
            d >= legend_labels[5]  ? '#00FF00' :
-                    '#808080'; //'#FFEDA0';
+                    '#d3d3d3'; //'#FFEDA0';
             // d <= legend_labels[7]  ? '#8B0000' :
                     
 }
@@ -97,11 +97,9 @@ info.onAdd = function (map) {
 };
 
 // method that we will use to update the control based on feature properties passed
-info.update = function (props) {
-
-    
-    this._div.innerHTML = '<h4>Počet lékařů</h4>' +  (props ?
-        '<b>' + normalized_names[props.name] + '</b><br/>' + ratios[props.name] + ' / 10 000 obyvatel ' 
+info.update = function (props) {  
+    this._div.innerHTML = '<h4>Počet lékařů</h4>'+  (props ?
+        '<b>' + normalized_names[props.name] + '</b><br/>' + (ratios[props.name] ? ratios[props.name]:0) + ' / 10 000 obyvatel ' 
         : 'Najeďte kurzorem na okres');
 };
 

@@ -57,6 +57,7 @@ class Demographics(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     district = db.Column(db.Unicode(100))
+    normalized = db.Column(db.String(100))
     nuts = db.Column(db.String(20))
     year = db.Column(db.Integer)
 
@@ -181,3 +182,10 @@ class Doctors(db.Model):
 
     district = db.Column(db.Unicode(100))
     nuts = db.Column(db.String(10))
+
+
+class MedicalSpecialty(db.Model):
+    __tablename__ = 'medicalspecialty'
+
+    id = db.Column(db.Integer, primary_key=True)
+    medical_specialty_name = db.Column(db.Unicode(50))
