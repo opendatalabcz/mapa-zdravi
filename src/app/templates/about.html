@@ -9,7 +9,12 @@ content %}
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-<div id="chart"></div>
+<div id="chartx"></div>
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='js/statistics.js') }}"
+></script>
 
 <script>
   var options = {
@@ -20,11 +25,18 @@ content %}
         data: {{data}},
       },
       {
+        name: "Website Blog",
+        type: "column",
+        data: {{data}},
+      },
+
+      {
         name: "Social Media",
         type: "line",
         data: {{data}},
       },
     ],
+
     chart: {
       height: 350,
       type: "line",
@@ -71,7 +83,7 @@ content %}
     ],
   };
 
-  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  var chart = new ApexCharts(document.querySelector("#chartx"), options);
   chart.render();
 </script>
 {% endblock %}

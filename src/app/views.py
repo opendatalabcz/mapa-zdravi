@@ -101,6 +101,8 @@ def map():
 
     # variables for map.js
     ratios = pd.Series(df.ratio.values, index=df.normalized).to_dict()
+
+    # TODO dynamic labels based on ratios and insurances?
     legend_labels = [20, 40, 60, 80, 90, 100, 'Data nedostupná']
 
     return render_template('map.html',

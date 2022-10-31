@@ -1,17 +1,3 @@
-function getColorByName(n) {
-    var d = ratios[n]
-    // https://stackoverflow.com/questions/4161369/html-color-codes-red-to-yellow-to-green
-    return d < legend_labels[0]  ? '#FF0000' :
-           d < legend_labels[1]  ? '#FF4400' :
-           d < legend_labels[2]  ? '#FFAA00' :
-           d < legend_labels[3]  ? '#FFFF00' :
-           d < legend_labels[4]  ? '#AAFF00' :
-           d < legend_labels[5]  ? '#44FF00' :
-           d >= legend_labels[5]  ? '#00FF00' :
-                    '#d3d3d3';
-            // d <= legend_labels[7]  ? '#8B0000' :
-                    
-}
 function getColor(d) {
     // https://stackoverflow.com/questions/4161369/html-color-codes-red-to-yellow-to-green
     return d < legend_labels[0]  ? '#FF0000' :
@@ -19,13 +5,17 @@ function getColor(d) {
            d < legend_labels[2]  ? '#FFAA00' :
            d < legend_labels[3]  ? '#FFFF00' :
            d < legend_labels[4]  ? '#AAFF00' :
-           d < legend_labels[5]  ? '#44FF00' :
+           d < legend_labels[5]  ? '#66FF00' :
            d >= legend_labels[5]  ? '#00FF00' :
                     '#d3d3d3'; //'#FFEDA0';
             // d <= legend_labels[7]  ? '#8B0000' :
                     
 }
 
+function getColorByName(n) {
+    var d = ratios[n]
+    return getColor(d);
+}
 
 
 function style(feature) {
