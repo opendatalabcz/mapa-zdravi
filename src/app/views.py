@@ -70,18 +70,19 @@ def map():
             func.count(distinct(Doctors.doctor_id))
         ).group_by(Doctors.district).filter(Doctors.medical_specialty.contains(ms_value))
     else:
+        ms_value = 'celkem'
         doctor_cnt = db.session.query(
             Doctors.district,
             func.count(distinct(Doctors.doctor_id))
         ).group_by(Doctors.district)
+
+    doctor_df = pd.DataFrame(doctor_cnt, columns=['district', 'n_doctors'])
 
     # Medical specialty query
     ms = db.session.query(
         MedicalSpecialty.medical_specialty_name,
         MedicalSpecialty.id
     ).distinct().order_by(MedicalSpecialty.id)
-
-    doctor_df = pd.DataFrame(doctor_cnt, columns=['district', 'n_doctors'])
 
     # Demographics query
     demo_cnt = db.session.query(
@@ -98,13 +99,17 @@ def map():
     df = pd.merge(doctor_df, demo_df, on='district')
     df['ratio'] = round(10000 * df.n_doctors / df.population, 2)
     df = df.sort_values('ratio', ascending=False).reset_index(drop=True)
-
     # variables for map.js
     ratios = pd.Series(df.ratio.values, index=df.normalized).to_dict()
 
     # TODO dynamic labels based on ratios and insurances?
     legend_labels = [20, 40, 60, 80, 90, 100, 'Data nedostupná']
 
+    vals = list(df['ratio'].quantile(
+        [.2, .3, .5, .65, .75, .90, .95]).values)
+    vals = [round(n, 2) for n in vals]
+    print(vals)
+    legend_labels = vals + ['Data nedostupná']
     return render_template('map.html',
                            legend_labels=legend_labels,
                            medical_specialties=ms,

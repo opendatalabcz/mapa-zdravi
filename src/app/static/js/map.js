@@ -88,7 +88,7 @@ info.onAdd = function (map) {
 
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {  
-    this._div.innerHTML = '<h4>Počet lékařů</h4>'+  (props ?
+    this._div.innerHTML = '<h4>Počet lékařů' + '</h4>'+  (props ?
         '<b>' + normalized_names[props.name] + '</b><br/>' + (ratios[props.name] ? ratios[props.name]:0) + ' / 10 000 obyvatel ' 
         : 'Najeďte kurzorem na okres');
 };
@@ -106,17 +106,17 @@ legend.onAdd = function (map) {
 
 
         div.innerHTML +=
-        '<i style="background:' + getColor(grades[0]-1) + '"></i> <' +
+        '<i style="background:' + getColor(grades[0]-1) + '"></i> < ' +
         grades[0] +'<br>';
 
     for (var i = 1; i < grades.length-1; i++) {
         div.innerHTML +=
-            '<i style="background:' + getColor(grades[i]-1) + '"></i> ' +
-            grades[i-1] + '-' + (grades[i]-0.01) + '<br>';
+            '<i style="background:' + getColor(grades[i]-0.01) + '"></i> ' +
+            grades[i-1] + (grades[i-1] == grades[i] ? '' : '-' + ((grades[i]-0.01).toFixed(2))) + '<br>';
     }
 
     div.innerHTML +=
-    '<i style="background:' + getColor(grades[grades.length-2]) + '"></i> >' +
+    '<i style="background:' + getColor(grades[grades.length-2]) + '"></i> > ' +
     grades[grades.length-2] +'<br>';
 
 
