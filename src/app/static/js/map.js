@@ -5,8 +5,9 @@ function getColor(d) {
            d < legend_labels[2]  ? '#FF9900' :
            d < legend_labels[3]  ? '#FFDD00' :
            d < legend_labels[4]  ? '#FFFF00' :
-           d < legend_labels[5]  ? '#66FF00' :
-           d >= legend_labels[5]  ? '#00FF00' :
+           d < legend_labels[5]  ? '#99FF00' :
+           d < legend_labels[6]  ? '#44FF00' :
+           d >= legend_labels[6]  ? '#00FF00' :
                     '#d3d3d3'; //'#FFEDA0';
             // d <= legend_labels[7]  ? '#8B0000' :
                     
@@ -102,8 +103,9 @@ legend.onAdd = function (map) {
 
     var div = L.DomUtil.create('div', 'info legend'),
         grades = legend_labels,
-        labels = [];
-
+        labels = ['<strong>Počet lékařů / 10 tis. obyv.</strong><br>'];
+    
+        div.innerHTML += labels.join('<br>');
 
         div.innerHTML +=
         '<i style="background:' + getColor(grades[0]-1) + '"></i> < ' +
