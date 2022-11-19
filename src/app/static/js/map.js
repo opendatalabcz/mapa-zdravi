@@ -1,16 +1,28 @@
 function getColor(d) {
-    // https://stackoverflow.com/questions/4161369/html-color-codes-red-to-yellow-to-green
-    return d < legend_labels[0]  ? '#FF0000' :
-           d < legend_labels[1]  ? '#FF4400' :
-           d < legend_labels[2]  ? '#FF9900' :
-           d < legend_labels[3]  ? '#FFDD00' :
-           d < legend_labels[4]  ? '#FFFF00' :
-           d < legend_labels[5]  ? '#99FF00' :
-           d < legend_labels[6]  ? '#44FF00' :
-           d >= legend_labels[6]  ? '#00FF00' :
-                    '#d3d3d3'; //'#FFEDA0';
-            // d <= legend_labels[7]  ? '#8B0000' :
-                    
+    
+    if(legend_ascending === true){
+        return d < legend_labels[0]  ? '#FF0000' :
+        d < legend_labels[1]  ? '#FF4400' :
+        d < legend_labels[2]  ? '#FF9900' :
+        d < legend_labels[3]  ? '#FFDD00' :
+        d < legend_labels[4]  ? '#FFFF00' :
+        d < legend_labels[5]  ? '#99FF00' :
+        d < legend_labels[6]  ? '#44FF00' :
+        d >= legend_labels[6]  ? '#00FF00' :
+                 '#d3d3d3'; //'#FFEDA0';
+
+    }
+    else{
+        return d > legend_labels[6]  ? '#FF0000' :
+        d > legend_labels[5]  ? '#FF4400' :
+        d > legend_labels[4]  ? '#FF9900' :
+        d > legend_labels[3]  ? '#FFDD00' :
+        d > legend_labels[2]  ? '#FFFF00' :
+        d > legend_labels[1]  ? '#99FF00' :
+        d > legend_labels[0]  ? '#44FF00' :
+        d <= legend_labels[0]  ? '#00FF00' :
+                 '#d3d3d3'; //'#FFEDA0';
+    }                    
 }
 
 function getColorByName(n) {
@@ -89,8 +101,8 @@ info.onAdd = function (map) {
 
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {  
-    this._div.innerHTML = '<h4>Počet lékařů' + '</h4>'+  (props ?
-        '<b>' + normalized_names[props.name] + '</b><br/>' + (ratios[props.name] ? ratios[props.name]:0) + ' / 10 000 obyvatel ' 
+    this._div.innerHTML = '<h4>'+map_title +'</h4>'+  (props ?
+        '<b>' + normalized_names[props.name] + '</b><br/>' + (ratios[props.name] ? ratios[props.name]:0) + ratio_label
         : 'Najeďte kurzorem na okres');
 };
 
@@ -103,7 +115,7 @@ legend.onAdd = function (map) {
 
     var div = L.DomUtil.create('div', 'info legend'),
         grades = legend_labels,
-        labels = ['<strong>Počet lékařů / 10 tis. obyv.</strong><br>'];
+        labels = ['<strong>'+legend_title+'</strong><br>'];
     
         div.innerHTML += labels.join('<br>');
 

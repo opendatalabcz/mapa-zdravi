@@ -82,7 +82,11 @@
 <script type="text/javascript">
   var legend_labels ={{legend_labels|safe}};
   var ratios ={{ratios|safe}};
-  var normalized_names ={{normalized_names|safe}};
+  var normalized_names = {{normalized_names|safe}};
+  var legend_title = JSON.parse('{{legend_title| tojson|safe}}');
+  var map_title = {{map_title|tojson|safe}};
+  var legend_ascending = JSON.parse('{{legend_ascending| tojson|safe}}');
+  var ratio_label = {{ratio_label|tojson|safe}};
 </script>
 
 <script

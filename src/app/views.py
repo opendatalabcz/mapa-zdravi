@@ -35,26 +35,11 @@ def about():
     return render_template('about.html', data=randomlist)
 
 
-@views.route('/lekari')
-def doctors():
+@views.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
-    # https://docs.sqlalchemy.org/en/14/orm/query.html
-    doctor_cnt = db.session.query(
-        Doctors.district,
-        func.count(Doctors.doctor_id)
-    ).group_by(Doctors.district)
-
-    doctor_df = pd.DataFrame(doctor_cnt, columns=['district', 'n_doctors'])
-    demo_cnt = db.session.query(
-        Demographics.district,
-        Demographics.population
-    ).filter(Demographics.year == 2021)
-
-    demo_df = pd.DataFrame(demo_cnt, columns=['district', 'population'])
-    df = pd.merge(doctor_df, demo_df, on='district')
-    df['ratio'] = round(10000 * df.n_doctors / df.population, 2)
-    data = df[['district', 'ratio']].values.tolist()
-    return render_template('doctors.html', data=data)
+# -------------------------------------------------------------
 
 
 @ views.route('/mapa', methods=['GET', 'POST'])
@@ -99,29 +84,83 @@ def map():
     df = pd.merge(doctor_df, demo_df, on='district')
     df['ratio'] = round(10000 * df.n_doctors / df.population, 2)
     df = df.sort_values('ratio', ascending=False).reset_index(drop=True)
-    # variables for map.js
     ratios = pd.Series(df.ratio.values, index=df.normalized).to_dict()
 
-    # TODO dynamic labels based on ratios and insurances?
-    legend_labels = [20, 40, 60, 80, 90, 100, 'Data nedostupná']
-
+    # legend labels
     vals = list(df['ratio'].quantile(
         [.2, .3, .5, .65, .75, .90, .95]).values)
-    vals = [round(n, 2) for n in vals]
-    print(vals)
-    legend_labels = vals + ['Data nedostupná']
+    legend_labels = [round(n, 2) for n in vals] + ['Data nedostupná']
+    print(legend_labels)
+
+    map_kwargs = {
+        'map_title': 'Počet lékařů',
+        'legend_title': 'Počet lékařů / 10 tis. obyv.',
+        'ratio_label': ' / 10 000 obyvatel',
+        'legend_ascending': True
+    }
+
+    print(map_kwargs)
+
     return render_template('map.html',
                            legend_labels=legend_labels,
                            medical_specialties=ms,
                            ratios=ratios,
                            normalized_names=normalized_names,
                            top5=df.head(),
-                           worst5=df.tail().iloc[::-1])
+                           worst5=df.tail().iloc[::-1],
+                           **map_kwargs)
+
+# -------------------------------------------------------------
+
+
+def age_map():
+    map_kwargs = {
+        'map_title': 'Průměrný věk lékařů',
+        'legend_title': 'Průměrný věk',
+        'ratio_label': ' let',
+        'legend_ascending': False
+    }
+
+    # demographics query
+    demo_cnt = db.session.query(
+        Demographics.district,
+        Demographics.normalized
+    ).distinct(Demographics.district)
+
+    demo_df = pd.DataFrame(demo_cnt, columns=['district', 'normalized'])
+    normalized_names = pd.Series(
+        demo_df.district.values, index=demo_df.normalized).to_dict()
+
+    map_kwargs['normalized_names'] = normalized_names
+
+    # doctors age query
+    doctor_cnt = db.session.query(
+        Doctors.district,
+        Doctors.age_estimate
+    ).distinct(Doctors.district, Doctors.doctor_id)
+
+    doctor_df = pd.DataFrame(doctor_cnt, columns=[
+                             'district', 'age_estimate'])
+    doctor_df = pd.merge(doctor_df, demo_df, on='district')[
+        ['normalized', 'age_estimate']]
+    district_ages = doctor_df.groupby(
+        'normalized').mean().apply(lambda x: round(x, 2))
+    ratios = pd.Series(district_ages.age_estimate.values,
+                       index=district_ages.index).to_dict()
+
+    map_kwargs['ratios'] = ratios
+
+    # legend labels
+    vals = list(district_ages['age_estimate'].quantile(
+        [.2, .3, .5, .65, .75, .90, .95]).values)
+    map_kwargs['legend_labels'] = [round(n, 2) for n in vals]
+    return map_kwargs
 
 
 @ views.route('/statistiky')
 def statistics():
-    # TODO load statistics
-    # TODO update and visualize them based on the input -> create GET, POST here
 
-    return render_template('statistics.html')
+    map_kwargs = age_map()
+
+    # TODO create and upload statistics
+    return render_template('statistics.html', **map_kwargs)
