@@ -91,7 +91,7 @@ def map():
     df = pd.merge(doctor_df, demo_df, on='district')
     df['ratio'] = round(10000 * df.n_doctors / df.population, 2)
     df = df.sort_values('ratio', ascending=False).reset_index(drop=True)
-    map_kwargs['ratios'] = pd.Series(
+    map_kwargs['data'] = pd.Series(
         df.ratio.values, index=df.normalized).to_dict()
 
     # legend labels
@@ -141,11 +141,11 @@ def age_map():
         ['normalized', 'age_estimate']]
     district_ages = doctor_df.groupby(
         'normalized').mean().apply(lambda x: round(x, 2))
-    ratios = pd.Series(district_ages.age_estimate.values,
-                       index=district_ages.index).to_dict()
+    ages = pd.Series(district_ages.age_estimate.values,
+                     index=district_ages.index).to_dict()
 
-    map_kwargs['ratios'] = ratios
-
+    map_kwargs['data'] = ages
+    
     # legend labels
     vals = list(district_ages['age_estimate'].quantile(
         [.2, .3, .5, .65, .75, .90, .95]).values)

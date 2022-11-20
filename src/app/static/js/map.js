@@ -26,7 +26,7 @@ function getColor(d) {
 }
 
 function getColorByName(n) {
-    var d = ratios[n]
+    var d = data[n]
     return getColor(d);
 }
 
@@ -102,7 +102,7 @@ info.onAdd = function (map) {
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {  
     this._div.innerHTML = '<h4>'+map_title +'</h4>'+  (props ?
-        '<b>' + normalized_names[props.name] + '</b><br/>' + (ratios[props.name] ? ratios[props.name]:0) + ratio_label
+        '<b>' + normalized_names[props.name] + '</b><br/>' + (data[props.name] ? data[props.name]:0) + ratio_label
         : 'Najeďte kurzorem na okres');
 };
 
