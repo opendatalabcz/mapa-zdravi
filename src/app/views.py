@@ -140,17 +140,20 @@ def age_map():
     doctor_df = pd.merge(doctor_df, demo_df, on='district')[
         ['normalized', 'age_estimate']]
     district_ages = doctor_df.groupby(
-        'normalized').mean().apply(lambda x: round(x, 2))
+        'normalized').mean().apply(lambda x: round(x, 2)).sort_values('age_estimate')
     ages = pd.Series(district_ages.age_estimate.values,
                      index=district_ages.index).to_dict()
 
     map_kwargs['data'] = ages
-    
     # legend labels
     vals = list(district_ages['age_estimate'].quantile(
         [.2, .3, .5, .65, .75, .90, .95]).values)
     map_kwargs['legend_labels'] = [round(n, 2)
                                    for n in vals] + ['Data nedostupná']
+
+    map_kwargs['legend_labels'] = [
+        50, 52, 55, 58, 60, 'Data nedostupná']
+
     return map_kwargs
 
 

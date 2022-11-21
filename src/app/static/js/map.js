@@ -13,13 +13,11 @@ function getColor(d) {
 
     }
     else{
-        return d > legend_labels[6]  ? '#FF0000' :
-        d > legend_labels[5]  ? '#FF4400' :
-        d > legend_labels[4]  ? '#FF9900' :
-        d > legend_labels[3]  ? '#FFDD00' :
-        d > legend_labels[2]  ? '#FFFF00' :
-        d > legend_labels[1]  ? '#99FF00' :
-        d > legend_labels[0]  ? '#44FF00' :
+        return d > legend_labels[4]  ? '#FF0000' :
+        d > legend_labels[3]  ? '#FF4400' :
+        d > legend_labels[2]  ? '#FF9900' :
+        d > legend_labels[1]  ? '#FFFF00' :
+        d > legend_labels[0]  ? '#99FF00' :
         d <= legend_labels[0]  ? '#00FF00' :
                  '#d3d3d3'; //'#FFEDA0';
     }                    
