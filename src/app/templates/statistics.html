@@ -7,6 +7,8 @@
   crossorigin=""
 />
 
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 {% endblock %}{% block title %}Statistiky - {% endblock %} {% block content %}
 <div class="p-3">
   <h1>Statistiky</h1>
@@ -25,10 +27,21 @@
   </div>
 </div>
 
-<div
-  id="map"
-  class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
-></div>
+<div>
+  <h3>Průměrný věk lékařů podle krajů</h3>
+  <div
+    id="map"
+    class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
+  ></div>
+</div>
+<div>
+  <h3>
+    Počet nových lékařů v ČLK a absolventů Všeobecného lékařství v jednotlivých
+    letech
+  </h3>
+  <div id="linechart"></div>
+</div>
+
 {% endblock %} {% block scripts %}
 
 <script
@@ -36,6 +49,7 @@
   src="{{ url_for('static', filename='geojson/regions.json') }}"
 ></script>
 <script type="text/javascript">
+  // MAP: Average age
   var legend_labels ={{legend_labels|safe}};
   var data ={{data|safe}};
   var normalized_names ={{normalized_names|safe}};
@@ -43,11 +57,20 @@
   var map_title = {{map_title|tojson|safe}};
   var legend_ascending = JSON.parse('{{legend_ascending| tojson|safe}}');
   var ratio_label = {{ratio_label|tojson|safe}};
+
+  // RANDOM APEXCHARTS
+  var new_doctors = {{new_doctors|tojson|safe}};
+  var graduates = {{graduates|tojson|safe}};
+  var years = {{years|tojson|safe}};
 </script>
 
 <script
   type="text/javascript"
   src="{{ url_for('static', filename='js/map.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='js/statistics.js') }}"
 ></script>
 
 {% endblock %}

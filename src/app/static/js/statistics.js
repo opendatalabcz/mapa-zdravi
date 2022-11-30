@@ -1,66 +1,46 @@
 var options = {
 series: [
     {
-    name: "Website Blog",
-    type: "column",
-    data: {{data}},
-    },
+        name: "Absolventi VŠ",
+        type: "line",
+        data: graduates,
+        },    
     {
-    name: "Website Blog",
-    type: "column",
-    data: {{data}},
-    },
-
-    {
-    name: "Social Media",
+    name: "Noví lékaři v ČLK",
     type: "line",
-    data: {{data}},
+    data: new_doctors,
     },
+    
 ],
 
 chart: {
     height: 350,
     type: "line",
+    stacked: false
 },
 stroke: {
-    width: [0, 4],
+    width: [4, 4],
 },
 title: {
-    text: "Traffic Sources",
+    text: "",
 },
 dataLabels: {
     enabled: true,
-    enabledOnSeries: [1],
+    enabledOnSeries: [0,1],
 },
-labels: [
-    "01 Jan 2001",
-    "02 Jan 2001",
-    "03 Jan 2001",
-    "04 Jan 2001",
-    "05 Jan 2001",
-    "06 Jan 2001",
-    "07 Jan 2001",
-    "08 Jan 2001",
-    "09 Jan 2001",
-    "10 Jan 2001",
-    "11 Jan 2001",
-    "12 Jan 2001",
-],
+labels: years,
 xaxis: {
-    type: "datetime",
+    type: "int",
+    title: 'Rok'
 },
 yaxis: [
     {
     title: {
-        text: "Website Blog",
+        text: "Počet",
     },
-    },
-    {
-    opposite: true,
-    title: {
-        text: "Social Media",
-    },
-    },
+    }
 ],
 };
 
+var chart = new ApexCharts(document.querySelector("#linechart"), options);
+chart.render();
