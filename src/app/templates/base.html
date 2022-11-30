@@ -57,7 +57,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
-          <a class="nav-item nav-link" id="home" href="/">Hlavní stránka</a>
+          
           <a class="nav-item nav-link" id="mapa" href="/mapa">Mapa</a>
           <a class="nav-item nav-link" id="statistiky" href="/statistiky"
             >Statistiky</a
@@ -65,6 +65,7 @@
           <a class="nav-item nav-link" id="dashboard" href="/dashboard"
             >Dashboard</a
           >
+          <a class="nav-item nav-link" id="news" href="/news">Aktuality</a>
           <a class="nav-item nav-link" id="about" href="/about">O projektu</a>
         </div>
       </div>
@@ -102,22 +103,20 @@
       <div class="footer p-3 bg-dark mt-4 text-light">
         <div class="row align-items-center">
           <div class="col text-center text-lg-left">
-            <p class="mb-1">TODO footer, kontakt atd.</p>
-
             <p class="mb-1">
-              <!-- Vydavatel: ČVUT, Fakulta informačních technologií, Praha ve
-            spolupráci s laboratoří OpenDataLab.<br /> -->
               Garček Jan,
               <i>Dostupnost zdravotnické péče v České republice</i> [online].
               Diplomová práce. Praha: ČVUT, Fakulta informačních technologií &
               OpenDataLab, 2022. [cit. TBD] Dostupné z TBA.
             </p>
+            <p class="mb-1">
+              Zdroje dat:
+              <i
+                >ČLK, ČSK, ČSÚ, Lékařské fakulty VŠ ČR, vybrané pojišťovny ČR</i
+              >
+              <p class="mb-1">Konkakt: garcejan@cvut.cz</p>
 
-            <!-- <p class="mb-0 font-italic">
-              Provozovatel neodpovídá za správnost a úplnost zpracovaných dat a
-              informací, ani tato neověřuje a zříká se zodpovědnosti za veškeré
-              škody a újmy, které by použitím těchto dat mohly vzniknout.
-            </p> -->
+            </p>
           </div>
           <div class="col-lg-auto text-center mt-3 mt-lg-0">
             <a href="https://fit.cvut.cz/" target="_blank">
@@ -127,16 +126,18 @@
               />
             </a>
             &nbsp;
-            <a href="https://opendatalab.cz/" target="_blank">
+            <!-- <a href="https://opendatalab.cz/" target="_blank">
               <img
                 class="footer"
                 src="{{ url_for('static',filename='img/opendatalab.jpg') }}"
               />
-            </a>
-            <img
+            </a> -->
+            <a href="https://opendatalab.cz/" target="_blank">
+              <img
               class="footer"
               src="{{ url_for('static',filename='img/opendatalab_no_background.png') }}"
             />
+          </a>
           </div>
         </div>
       </div>
