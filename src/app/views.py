@@ -1,7 +1,7 @@
 from urllib import request
 from flask import Blueprint, render_template, request
 from .models import DentistsAgeEstimate, Demographics, Students, NRPZS, Insurances, Doctors, MedicalSpecialty
-from sqlalchemy import func, distinct
+from sqlalchemy import func, distinct, and_, or_, not_
 
 
 from . import db
@@ -22,17 +22,17 @@ def home():
     return render_template('home.html')
 
 
-@views.route('/about')
-def about():
+@views.route('/news')
+def news():
 
     # TODO make up what to write here
 
-    import random
-    randomlist = random.sample(range(10, 30), 10)
+    return render_template('news.html')
 
-    print(randomlist)
 
-    return render_template('about.html', data=randomlist)
+@views.route('/about')
+def about():
+    return render_template('about.html')
 
 
 @views.route('/dashboard')
@@ -48,7 +48,7 @@ def map():
     # TODO update and visualize them based on the input -> create GET, POST here
 
     map_kwargs = {
-        'map_title': 'Počet lékařů',
+        # 'map_title': 'Počet lékařů',
         'legend_title': 'Počet lékařů / 10 tis. obyv.',
         'ratio_label': ' / 10 000 obyvatel',
         'legend_ascending': True
@@ -68,13 +68,17 @@ def map():
             func.count(distinct(Doctors.doctor_id))
         ).group_by(Doctors.district)
 
+    map_kwargs['map_title'] = 'Počet lékařů - ' + ms_value
+
     doctor_df = pd.DataFrame(doctor_cnt, columns=['district', 'n_doctors'])
 
     # Medical specialty query
-    map_kwargs['ms'] = db.session.query(
+    map_kwargs['medical_specialties'] = db.session.query(
         MedicalSpecialty.medical_specialty_name,
         MedicalSpecialty.id
     ).distinct().order_by(MedicalSpecialty.id)
+
+    map_kwargs['ms_value'] = ms_value
 
     # Demographics query
     demo_cnt = db.session.query(
@@ -103,7 +107,7 @@ def map():
     return render_template('map.html',
                            **map_kwargs,
                            top5=df.head(),
-                           worst5=df.tail().iloc[::-1]
+                           worst5=df.tail(10).iloc[::-1]
                            )
 
 # -------------------------------------------------------------
@@ -157,10 +161,47 @@ def age_map():
     return map_kwargs
 
 
+def new_doctors():
+    new_doctors_kwargs = {
+    }
+
+    # doctors age query
+    doctor_cnt = db.session.query(
+        Doctors.graduated_year,
+        func.count(distinct(Doctors.doctor_id))
+    ).group_by(Doctors.graduated_year)\
+        .filter(and_(Doctors.graduated_year < 2022.,
+                     Doctors.graduated_year > 2011.))
+
+    new_doctors_kwargs['new_doctors'] = list(dict(doctor_cnt).values())
+    new_doctors_kwargs['years'] = list(dict(doctor_cnt).keys())
+
+    print(dict(doctor_cnt).keys())
+    print(dict(doctor_cnt).values())
+
+    graduates_cnt = db.session.query(
+        Students.date_end,
+        func.count(distinct(Students.id))
+    ).group_by(Students.date_end)\
+        .filter(and_(Students.date_end < 2022.,
+                     Students.date_end > 2011.,
+                     Students.major == 'Všeobecné lékařství'))
+
+    new_doctors_kwargs['graduates'] = list(dict(graduates_cnt).values())
+    print(dict(graduates_cnt).values())
+    print(new_doctors_kwargs)
+
+    return new_doctors_kwargs
+
+
 @ views.route('/statistiky')
 def statistics():
 
     map_kwargs = age_map()
 
+    new_doctors_kwargs = new_doctors()
+
     # TODO create and upload statistics
-    return render_template('statistics.html', **map_kwargs)
+    return render_template('statistics.html',
+                           **map_kwargs,
+                           **new_doctors_kwargs)
