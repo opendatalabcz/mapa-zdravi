@@ -107,7 +107,7 @@ def map():
     return render_template('map.html',
                            **map_kwargs,
                            top5=df.head(),
-                           worst5=df.tail(10).iloc[::-1]
+                           worst5=df.tail().iloc[::-1]
                            )
 
 # -------------------------------------------------------------
@@ -176,9 +176,6 @@ def new_doctors():
     new_doctors_kwargs['new_doctors'] = list(dict(doctor_cnt).values())
     new_doctors_kwargs['years'] = list(dict(doctor_cnt).keys())
 
-    print(dict(doctor_cnt).keys())
-    print(dict(doctor_cnt).values())
-
     graduates_cnt = db.session.query(
         Students.date_end,
         func.count(distinct(Students.id))
@@ -188,10 +185,48 @@ def new_doctors():
                      Students.major == 'Všeobecné lékařství'))
 
     new_doctors_kwargs['graduates'] = list(dict(graduates_cnt).values())
-    print(dict(graduates_cnt).values())
-    print(new_doctors_kwargs)
 
     return new_doctors_kwargs
+
+
+def students():
+    students_kwargs = {
+    }
+
+    students = db.session.query(
+        Students.id,
+        Students.graduated,
+        Students.citizenship,
+        Students.date_end,
+    ).filter(and_(Students.date_end > 2011.,
+                  Students.citizenship.isnot(None),
+                  Students.citizenship != 'NaN',
+                  Students.date_end.isnot(None)))
+
+    students = pd.DataFrame(
+        students, columns=['_id', 'graduated', 'citizenship', 'date_end'])
+    students = students[~students.citizenship.isna()].drop_duplicates('_id')
+    # students.date_end = students.date_end.astype(int)
+    students.loc[~students.citizenship.isin(
+        ['CZE', 'SVK']), 'citizenship'] = 'Ostatní'
+
+    graduated = students[(students.graduated == True) & (
+        students.date_end < 2022) & (~students.citizenship.isna())
+    ].rename(columns={'graduated': 'count'})
+
+    graduated = graduated.groupby(['citizenship', 'date_end'])[
+        'count'].count().reset_index()
+
+    students_kwargs['graduated_czechs'] = graduated[graduated.citizenship ==
+                                                    'CZE']['count'].to_list()
+
+    students_kwargs['graduated_slovaks'] = graduated[graduated.citizenship ==
+                                                     'SVK']['count'].to_list()
+
+    students_kwargs['graduated_others'] = graduated[graduated.citizenship ==
+                                                    'Ostatní']['count'].to_list()
+
+    return students_kwargs
 
 
 @ views.route('/statistiky')
@@ -201,7 +236,10 @@ def statistics():
 
     new_doctors_kwargs = new_doctors()
 
+    student_kwargs = students()
+
     # TODO create and upload statistics
     return render_template('statistics.html',
                            **map_kwargs,
-                           **new_doctors_kwargs)
+                           **new_doctors_kwargs,
+                           **student_kwargs)

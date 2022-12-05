@@ -34,12 +34,14 @@
     class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
   ></div>
 </div>
-<div>
+<div class="container">
   <h3>
     Počet nových lékařů v ČLK a absolventů Všeobecného lékařství v jednotlivých
     letech
   </h3>
   <div id="linechart"></div>
+  <h3>Složení absolventů podle roku absolvování</h3>
+  <div id="barchart"></div>
 </div>
 
 {% endblock %} {% block scripts %}
@@ -62,6 +64,10 @@
   var new_doctors = {{new_doctors|tojson|safe}};
   var graduates = {{graduates|tojson|safe}};
   var years = {{years|tojson|safe}};
+
+  var graduated_czechs = {{graduated_czechs|tojson|safe}};
+  var graduated_slovaks = {{graduated_slovaks|tojson|safe}};
+  var graduated_others = {{graduated_others|tojson|safe}};
 </script>
 
 <script
