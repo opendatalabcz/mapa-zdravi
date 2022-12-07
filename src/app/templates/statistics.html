@@ -13,9 +13,10 @@
 <div class="p-3">
   <h1>Statistiky</h1>
 
-  <!-- <div class="container"> -->
   <div>
-    <h3>Průměrný věk lékařů podle specializací</h3>
+    <div class="container">
+      <h3>Průměrný věk lékařů podle specializací</h3>
+    </div>
     <iframe
       scrolling="no"
       style="border: none"
@@ -25,58 +26,63 @@
     >
     </iframe>
   </div>
+  <br />
+  <div>
+    <div class="container">
+      <h3>Průměrný věk lékařů podle krajů</h3>
+    </div>
+    <div
+      id="map"
+      class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
+    ></div>
+  </div>
+  <br />
+  <div class="container">
+    <h3>
+      Počet nových lékařů v ČLK a absolventů Všeobecného lékařství v
+      jednotlivých letech
+    </h3>
+    <div id="linechart"></div>
+    <br />
+    <h3>Složení absolventů podle roku absolvování</h3>
+    <div id="barchart"></div>
+
+    <!-- <div id="boxplot"></div> -->
+  </div>
+  {% endblock %} {% block scripts %}
+
+  <script
+    type="text/javascript"
+    src="{{ url_for('static', filename='geojson/regions.json') }}"
+  ></script>
+  <script type="text/javascript">
+    // MAP: Average age
+    var legend_labels ={{legend_labels|safe}};
+    var data ={{data|safe}};
+    var normalized_names ={{normalized_names|safe}};
+    var legend_title = JSON.parse('{{legend_title| tojson|safe}}');
+    var map_title = {{map_title|tojson|safe}};
+    var legend_ascending = JSON.parse('{{legend_ascending| tojson|safe}}');
+    var ratio_label = {{ratio_label|tojson|safe}};
+
+    // RANDOM APEXCHARTS
+    var new_doctors = {{new_doctors|tojson|safe}};
+    var graduates = {{graduates|tojson|safe}};
+    var years = {{years|tojson|safe}};
+
+    var graduated_czechs = {{graduated_czechs|tojson|safe}};
+    var graduated_slovaks = {{graduated_slovaks|tojson|safe}};
+    var graduated_others = {{graduated_others|tojson|safe}};
+  </script>
+
+  <script
+    type="text/javascript"
+    src="{{ url_for('static', filename='js/map.js') }}"
+  ></script>
+  <script
+    type="text/javascript"
+    src="{{ url_for('static', filename='js/statistics.js') }}"
+  ></script>
+
+  {% endblock %}
 </div>
-
-<div>
-  <h3>Průměrný věk lékařů podle krajů</h3>
-  <div
-    id="map"
-    class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
-  ></div>
-</div>
-<div class="container">
-  <h3>
-    Počet nových lékařů v ČLK a absolventů Všeobecného lékařství v jednotlivých
-    letech
-  </h3>
-  <div id="linechart"></div>
-  <h3>Složení absolventů podle roku absolvování</h3>
-  <div id="barchart"></div>
-</div>
-
-{% endblock %} {% block scripts %}
-
-<script
-  type="text/javascript"
-  src="{{ url_for('static', filename='geojson/regions.json') }}"
-></script>
-<script type="text/javascript">
-  // MAP: Average age
-  var legend_labels ={{legend_labels|safe}};
-  var data ={{data|safe}};
-  var normalized_names ={{normalized_names|safe}};
-  var legend_title = JSON.parse('{{legend_title| tojson|safe}}');
-  var map_title = {{map_title|tojson|safe}};
-  var legend_ascending = JSON.parse('{{legend_ascending| tojson|safe}}');
-  var ratio_label = {{ratio_label|tojson|safe}};
-
-  // RANDOM APEXCHARTS
-  var new_doctors = {{new_doctors|tojson|safe}};
-  var graduates = {{graduates|tojson|safe}};
-  var years = {{years|tojson|safe}};
-
-  var graduated_czechs = {{graduated_czechs|tojson|safe}};
-  var graduated_slovaks = {{graduated_slovaks|tojson|safe}};
-  var graduated_others = {{graduated_others|tojson|safe}};
-</script>
-
-<script
-  type="text/javascript"
-  src="{{ url_for('static', filename='js/map.js') }}"
-></script>
-<script
-  type="text/javascript"
-  src="{{ url_for('static', filename='js/statistics.js') }}"
-></script>
-
-{% endblock %}
