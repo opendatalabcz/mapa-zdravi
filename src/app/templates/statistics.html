@@ -11,21 +11,19 @@
 
 {% endblock %}{% block title %}Statistiky - {% endblock %} {% block content %}
 <div class="p-3">
-  <h1>Statistiky</h1>
-
-  <div>
-    <div class="container">
-      <h3>Průměrný věk lékařů podle specializací</h3>
-    </div>
-    <iframe
-      scrolling="no"
-      style="border: none"
-      src="{{url_for('static', filename='img/medical_specialty.html')}}"
-      width="100%"
-      id="setHeight"
-    >
-    </iframe>
+  <div class="container">
+    <h1>Statistiky</h1>
+    <h3>Průměrný věk lékařů podle specializací</h3>
   </div>
+
+  <iframe
+    scrolling="no"
+    style="border: none"
+    src="{{url_for('static', filename='img/medical_specialty.html')}}"
+    width="100%"
+    id="setHeight"
+  >
+  </iframe>
   <br />
   <div>
     <div class="container">
