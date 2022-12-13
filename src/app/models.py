@@ -185,3 +185,40 @@ class MedicalSpecialty(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     medical_specialty_name = db.Column(db.Unicode(50))
+
+# =====================================================
+# PREDICTION TABLES
+
+
+class InsurancesPrediction(db.Model):
+    __tablename__ = 'insurancesprediction'
+
+    id = db.Column(db.Integer, primary_key=True)
+    year = db.Column(db.Integer)
+    expertise_code = db.Column(db.Unicode(5))
+    district = db.Column(db.Unicode(50))
+    count = db.Column(db.Integer)
+    time = db.Column(db.Integer)
+    count_population = db.Column(db.Integer)
+    time_population = db.Column(db.Integer)
+    medical_specialty = db.Column(db.Unicode(100))
+
+
+class DoctorsPrediction(db.Model):
+    __tablename__ = 'doctorsprediction'
+
+    id = db.Column(db.Integer, primary_key=True)
+    district = db.Column(db.Unicode(100))
+    working_specialty = db.Column(db.Unicode(100))
+    mpwpd_per_speciality = db.Column(db.Integer)
+    year = db.Column(db.Integer)
+    senior_age = db.Column(db.Integer)
+    minutes_per_year = db.Column(db.Integer)
+
+
+# class NewDoctorsPrediction(db.Model):
+#     __tablename__ = 'newdoctorsprediction'
+
+#     id = db.Column(db.Integer, primary_key=True)
+
+#     # TODO

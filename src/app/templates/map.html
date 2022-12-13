@@ -7,70 +7,100 @@
   crossorigin=""
 />
 
-{% endblock %} {% block title %}Mapa - {% endblock %} {% block content %}
-
+{% endblock %} {% block title %}Mapa - {% endblock %}{% block content %}
 <div class="p-3">
-  <h1>Mapa dostupnosti lékařské péče</h1>
-
-  <div class="container">
+  <div class="container" align="left">
+    <h1 align="left">Predikce dostupnosti lékařské péče</h1>
     <form method="POST" action="/mapa" align="center">
+      <strong>Lékařská specializace:</strong>
       <select
         name="medical_specialty"
         id="medical_specialty"
         onchange="this.form.submit()"
       >
-        <option value="Všechny obory">--Vyberte obor--</option>
-        {% for med_spec in medical_specialties %}
+        <option value="všechny specializace">-- vyberte --</option>
+        {% for med_spec in medical_specialties %} {% if
+        med_spec.medical_specialty_name == ms_value %}
+        <option value="{{med_spec.medical_specialty_name}}" selected>
+          {{med_spec.medical_specialty_name}}
+        </option>
+        {% else %}
         <option value="{{med_spec.medical_specialty_name}}">
           {{med_spec.medical_specialty_name}}
         </option>
-        {% endfor %}
+        {% endif %} {% endfor %}
       </select>
+
+      <br />
+
+      <strong>ČLK ratio</strong>*:
+
+      <input
+        type="range"
+        min="1"
+        max="100"
+        value="{{clk_ratio}}"
+        id="clk_ratio"
+        name="clk_ratio"
+        oninput="clk_ratio_out.value = clk_ratio.value/100"
+        onchange="this.form.submit()"
+      />
+      <!-- class="slider" -->
+      <output id="clk_ratio_out">{{clk_ratio/100}}</output>
+
+      <br />
+      <strong>Rok</strong>:
+      <input
+        type="range"
+        min="2020"
+        max="2026"
+        value="{{pred_year}}"
+        id="pred_year"
+        name="pred_year"
+        oninput="pred_year_out.value = pred_year.value"
+        onchange="this.form.submit()"
+      />
+      <output id="pred_year_out">{{pred_year}}</output>
+      <br />
+      <strong>Důchodový věk</strong>:
+      <input
+        type="range"
+        min="60"
+        max="75"
+        value="{{senior_age}}"
+        id="senior_age"
+        name="senior_age"
+        oninput="senior_age_out.value = senior_age.value"
+        onchange="this.form.submit()"
+      />
+      <output id="senior_age_out">{{senior_age}} let</output>
+      <br />
+
+      <strong>Počet hodin</strong>:
+      <input
+        type="range"
+        min="30"
+        max="80"
+        value="{{hours_weekly}}"
+        id="hours_weekly"
+        name="hours_weekly"
+        oninput="hours_weekly_out.value = hours_weekly.value"
+        onchange="this.form.submit()"
+      />
+      <output id="hours_weekly_out">{{hours_weekly}}h týdně</output>
+      <br />
     </form>
   </div>
-  <br />
   <div
     id="map"
     class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
   ></div>
-  <div class="p-3 container">
-    <table class="table table-hover item-list table-striped">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Top {{top5.shape[0]}} okresů</th>
-          <th scope="col">Počet doktorů / 10 000 obyv.</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for i, row in top5.iterrows() %}
-        <tr>
-          <th class="tg-vhup">{{i+1}}</th>
-          <th class="tg-vhup">{{row['district']}}</th>
-          <th class="tg-vhup">{{row['ratio']}}</th>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <br />
-    <table class="table table-hover item-list table-striped">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Nejhorších {{worst5.shape[0]}} okresů</th>
-          <th scope="col">Počet doktorů / 10 000 obyv.</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for i, row in worst5.iterrows() %}
-        <tr>
-          <th class="tg-vhup">{{i+1}}</th>
-          <th class="tg-vhup">{{row['district']}}</th>
-          <th class="tg-vhup">{{row['ratio']}}</th>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+  <div class="container">
+    <i>
+      *Poměr mezi lékaři zapsanými do ČLK/ČSK a absolventy lékařských fakult VŠ
+      v daném roce.
+    </i>
   </div>
 </div>
 {% endblock %} {% block scripts %}
