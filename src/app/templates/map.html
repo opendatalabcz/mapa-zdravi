@@ -19,15 +19,10 @@
         onchange="this.form.submit()"
       >
         <option value="všechny specializace">-- vyberte --</option>
-        {% for med_spec in medical_specialties %} {% if
-        med_spec.medical_specialty_name == ms_value %}
-        <option value="{{med_spec.medical_specialty_name}}" selected>
-          {{med_spec.medical_specialty_name}}
-        </option>
+        {% for med_spec in medical_specialties %} {% if med_spec == ms_value %}
+        <option value="{{med_spec}}" selected>{{med_spec}}</option>
         {% else %}
-        <option value="{{med_spec.medical_specialty_name}}">
-          {{med_spec.medical_specialty_name}}
-        </option>
+        <option value="{{med_spec}}">{{med_spec}}</option>
         {% endif %} {% endfor %}
       </select>
 
