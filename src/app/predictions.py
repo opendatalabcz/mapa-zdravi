@@ -23,6 +23,25 @@ WORKDAYS_DICT = {2020: 251,
                  }
 
 
+def validate_ms(ms):
+    doctor_cnt = db.session.query(
+        DoctorsPrediction.working_specialty
+    ).distinct()
+    ds = set(pd.DataFrame(doctor_cnt)[0].unique())
+
+    insurances = db.session.query(
+        InsurancesPrediction.medical_specialty
+    ).distinct()
+    ins = set(pd.DataFrame(insurances)[0].unique())
+
+    common = ds & ins
+
+    ms = set(pd.DataFrame(get_medical_specialty())[0].unique())
+    ms_int = list(common & ms)
+    ms_int.sort()
+    return ms_int
+
+
 def predict_district(ws, ws_count, year):
     dist_counts = get_districts_cnt(ws, ws_count, year)
 
@@ -170,7 +189,9 @@ def pred_map(params):
     capacity['workload'] = round(100*capacity['time'] / capacity['capacity'])
 
     # Medical specialty query
-    map_kwargs['medical_specialties'] = get_medical_specialty()
+    med_spec = get_medical_specialty()
+    med_spec_val = validate_ms(med_spec)
+    map_kwargs['medical_specialties'] = ['všechny specializace'] + med_spec_val
     # Demographics query
     demo_df, normalized = get_districts_normalized()
     map_kwargs['normalized_names'] = normalized
