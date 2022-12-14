@@ -1,124 +1,34 @@
 from urllib import request
 from flask import Blueprint, render_template, request
-from .models import DentistsAgeEstimate, Demographics, Students, NRPZS, Insurances, Doctors, MedicalSpecialty, InsurancesPrediction, DoctorsPrediction
 from sqlalchemy import func, distinct, and_, or_, not_
 
-
 from . import db
+from .models import DentistsAgeEstimate, Demographics, Students, NRPZS, Insurances, Doctors, MedicalSpecialty, InsurancesPrediction, DoctorsPrediction
+
+from .queries import get_districts_normalized, get_medical_specialty
 
 import pandas as pd
 import random
 import re
 import unidecode
+from collections import Counter
+import math
+import numpy as np
+
 
 views = Blueprint('views', __name__)
 
 
-def pred_map(params):
-
-    clk_ratio = params['clk_ratio']
-    pred_year = params['pred_year']
-    senior_age = params['senior_age']
-    hours_weekly = params['hours_weekly']
-
-    ms_value = request.form.get('medical_specialty')
-
-    map_kwargs = {
-        'legend_title': 'Vykázané výkony / úvazky lékařů (v %)',
-        'ratio_label': ' %',
-        'legend_ascending': False
-    }
-
-    if request.method == 'POST' and ms_value != 'všechny specializace' and not '--' in ms_value:
-        print(ms_value)
-        insurances = db.session.query(
-            InsurancesPrediction.district,
-            InsurancesPrediction.count_population,
-            InsurancesPrediction.time_population,
-        ).filter(and_(InsurancesPrediction.year == pred_year,
-                      InsurancesPrediction.medical_specialty == ms_value))
-
-        doctors = db.session.query(
-            DoctorsPrediction.district,
-            DoctorsPrediction.minutes_per_year,
-            DoctorsPrediction.mpwpd_per_speciality,
-        ).filter(and_(DoctorsPrediction.year == pred_year,
-                      DoctorsPrediction.senior_age == senior_age,
-                      DoctorsPrediction.working_specialty == ms_value))
-
-    else:
-        ms_value = 'všechny specializace'
-
-        insurances = db.session.query(
-            InsurancesPrediction.district,
-            func.sum(InsurancesPrediction.count_population).label('cnt_total'),
-            func.sum(InsurancesPrediction.time_population).label('time_total'),
-        ).group_by(InsurancesPrediction.district).filter(and_(InsurancesPrediction.year == pred_year))
-
-        doctors = db.session.query(
-            DoctorsPrediction.district,
-            func.sum(DoctorsPrediction.minutes_per_year).label('capacity'),
-            func.sum(DoctorsPrediction.mpwpd_per_speciality,
-                     ).label('capacity_daily'),
-        ).group_by(DoctorsPrediction.district).filter(and_(DoctorsPrediction.year == pred_year,
-                                                           DoctorsPrediction.senior_age == senior_age))
-
-    map_kwargs['map_title'] = 'Časové zatížení - ' + ms_value
-    map_kwargs['ms_value'] = ms_value
-
-    doctors_df = pd.DataFrame(
-        doctors, columns=['district', 'capacity', 'capacity_daily'])
-    insurances_df = pd.DataFrame(
-        insurances, columns=['district', 'count', 'time'])
-
-    capacity = pd.merge(doctors_df, insurances_df, on='district')
-    # in case doctors work work longer than fulltime
-    capacity['capacity'] = round(capacity['capacity'] * hours_weekly / 40)
-    # compute capacity
-    capacity['workload'] = round(100*capacity['time'] / capacity['capacity'])
-
-    # Medical specialty query
-    map_kwargs['medical_specialties'] = db.session.query(
-        MedicalSpecialty.medical_specialty_name,
-        MedicalSpecialty.id
-    ).distinct().order_by(MedicalSpecialty.id)
-
-    map_kwargs['ms_value'] = ms_value
-
-    # Demographics query
-    demo_cnt = db.session.query(
-        Demographics.district,
-        Demographics.population,
-        Demographics.normalized
-    ).filter(Demographics.year == 2021)
-
-    demo_df = pd.DataFrame(
-        demo_cnt, columns=['district', 'population', 'normalized'])
-    map_kwargs['normalized_names'] = pd.Series(
-        demo_df.district.values, index=demo_df.normalized).to_dict()
-
-    df = pd.merge(capacity, demo_df, on='district')
-
-    df = df.sort_values('workload', ascending=False).reset_index(drop=True)
-    map_kwargs['data'] = pd.Series(
-        df.workload.values, index=df.normalized).to_dict()
-
-    # legend labels
-    map_kwargs['legend_labels'] = [
-        75, 100, 125, 150, 200, 500, 'Data nedostupná']
-
-    return map_kwargs
-
-
 @views.route('/mapa', methods=['GET', 'POST'])
 def map():
-
     if request.method == 'POST':
         param_kwargs = {
             'clk_ratio': int(request.form.get('clk_ratio')),
             'pred_year': int(request.form.get('pred_year')),
             'senior_age': int(request.form.get('senior_age')),
             'hours_weekly': int(request.form.get('hours_weekly')),
+            'ms_value': request.form.get('medical_specialty'),
+            'map_title': f'Výkonnostní kapacita - {request.form.get("medical_specialty")}',
         }
     else:
         param_kwargs = {
@@ -126,8 +36,12 @@ def map():
             'pred_year': 2021,
             'senior_age': 65,
             'hours_weekly': 40,
+            'ms_value': 'všechny specializace',
+            'map_title': f'Výkonnostní kapacita - všechny specializace',
         }
     print(param_kwargs)
+
+    from .predictions import pred_map
 
     map_kwargs = pred_map(param_kwargs)
 
@@ -188,23 +102,10 @@ def home():
     doctor_df = pd.DataFrame(doctor_cnt, columns=['district', 'n_doctors'])
 
     # Medical specialty query
-    map_kwargs['medical_specialties'] = db.session.query(
-        MedicalSpecialty.medical_specialty_name,
-    ).distinct().order_by(MedicalSpecialty.id)
+    map_kwargs['medical_specialties'] = get_medical_specialty()
 
-    map_kwargs['ms_value'] = ms_value
-
-    # Demographics query
-    demo_cnt = db.session.query(
-        Demographics.district,
-        Demographics.population,
-        Demographics.normalized
-    ).filter(Demographics.year == 2021)
-
-    demo_df = pd.DataFrame(
-        demo_cnt, columns=['district', 'population', 'normalized'])
-    map_kwargs['normalized_names'] = pd.Series(
-        demo_df.district.values, index=demo_df.normalized).to_dict()
+    demo_df, normalized = get_districts_normalized()
+    map_kwargs['normalized_names'] = normalized
 
     df = pd.merge(doctor_df, demo_df, on='district')
     df['ratio'] = round(10000 * df.n_doctors / df.population, 2)
@@ -236,16 +137,8 @@ def age_map():
     }
 
     # demographics query
-    demo_cnt = db.session.query(
-        Demographics.district,
-        Demographics.normalized
-    ).distinct(Demographics.district)
-
-    demo_df = pd.DataFrame(demo_cnt, columns=['district', 'normalized'])
-    normalized_names = pd.Series(
-        demo_df.district.values, index=demo_df.normalized).to_dict()
-
-    map_kwargs['normalized_names'] = normalized_names
+    demo_df, normalized = get_districts_normalized()
+    map_kwargs['normalized_names'] = normalized
 
     # doctors age query
     doctor_cnt = db.session.query(

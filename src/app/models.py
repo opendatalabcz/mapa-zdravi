@@ -216,9 +216,20 @@ class DoctorsPrediction(db.Model):
     minutes_per_year = db.Column(db.Integer)
 
 
-# class NewDoctorsPrediction(db.Model):
-#     __tablename__ = 'newdoctorsprediction'
+class DoctorsDistribution(db.Model):
+    __tablename__ = 'doctorsdistribution'
 
-#     id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    doctor_id = db.Column(db.Unicode(100))
+    working_specialty = db.Column(db.Unicode(100))
+    graduated_year = db.Column(db.Integer)
+    district = db.Column(db.Unicode(100))
 
-#     # TODO
+
+class NewDoctorsEstimate(db.Model):
+    __tablename__ = 'newdoctorsestimate'
+
+    id = db.Column(db.Integer, primary_key=True)
+    graduate_estimate = db.Column(db.Integer)
+    date_end = db.Column(db.Integer)
+    type = db.Column(db.Unicode(10))
