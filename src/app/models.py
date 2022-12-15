@@ -233,3 +233,14 @@ class NewDoctorsEstimate(db.Model):
     graduate_estimate = db.Column(db.Integer)
     date_end = db.Column(db.Integer)
     type = db.Column(db.Unicode(10))
+
+
+class NewDoctorsPrecomputed(db.Model):
+    __tablename__ = 'newdoctorsprecomputed'
+
+    id = db.Column(db.Integer, primary_key=True)
+    district = db.Column(db.Unicode(100))
+    working_specialty = db.Column(db.Unicode(100))
+    new_doctors = db.Column(db.Integer)
+    clk_ratio = db.Column(db.Float)
+    year = db.Column(db.Integer)

@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request
 from sqlalchemy import func, distinct, and_, or_, not_
 
 from . import db
-from .models import DentistsAgeEstimate, Demographics, Students, NRPZS, Insurances, Doctors, MedicalSpecialty, InsurancesPrediction, DoctorsPrediction, DoctorsDistribution, NewDoctorsEstimate
+from .models import DentistsAgeEstimate, Demographics, Students, NRPZS, Insurances, Doctors, MedicalSpecialty, InsurancesPrediction, DoctorsPrediction, DoctorsDistribution, NewDoctorsEstimate, NewDoctorsPrecomputed
 
 import pandas as pd
 import numpy as np
@@ -93,3 +93,23 @@ def get_new_doctors(clk_ratio):
         new_doctors_estimate['graduate_estimate'] * clk_ratio).apply(math.ceil)
 
     return new_doctors_estimate
+
+
+def get_new_doctors_db(clk_ratio, pred_year, ms):
+
+    if ms == 'všechny specializace':
+        filt = and_(NewDoctorsPrecomputed.year <= pred_year,
+                    NewDoctorsPrecomputed.clk_ratio == clk_ratio)
+    else:
+        filt = and_(NewDoctorsPrecomputed.working_specialty == ms,
+                    NewDoctorsPrecomputed.year <= pred_year,
+                    NewDoctorsPrecomputed.clk_ratio == clk_ratio)
+    new_docs_query = db.session.query(
+        NewDoctorsPrecomputed.district,
+        func.sum(distinct(NewDoctorsPrecomputed.new_doctors))
+    ).group_by(NewDoctorsPrecomputed.district)\
+        .filter(filt)
+
+    new_doctors = pd.DataFrame(new_docs_query, columns=[
+                               'district', 'new_doctors'])
+    return new_doctors

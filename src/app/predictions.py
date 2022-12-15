@@ -4,7 +4,7 @@ from sqlalchemy import func, distinct, and_, or_, not_
 
 from . import db
 from .models import InsurancesPrediction, DoctorsPrediction, NewDoctorsEstimate, DoctorsDistribution
-from .queries import get_districts_normalized, get_medical_specialty, get_ws_probability, get_districts_cnt, get_new_doctors
+from .queries import get_districts_normalized, get_medical_specialty, get_ws_probability, get_districts_cnt, get_new_doctors, get_new_doctors_db
 
 
 import pandas as pd
@@ -125,6 +125,13 @@ def pred_new_doctors(clk_ratio, pred_year, medical_specialty):
     return new_doctors
 
 
+def pred_new_doctors_db(clk_ratio, pred_year, medical_specialty):
+    new_doctors = get_new_doctors_db(clk_ratio, pred_year, medical_specialty)
+    new_doctors['capacity'] = 8*60*WORKDAYS_DICT[pred_year] * \
+        new_doctors['new_doctors']  # minutes_per_year
+    return new_doctors
+
+
 def pred_map(params):
     clk_ratio = params['clk_ratio']/100
     pred_year = params['pred_year']
@@ -174,13 +181,14 @@ def pred_map(params):
     insurances_df = pd.DataFrame(
         insurances, columns=['district', 'count', 'time'])
 
-    if pred_year > 2021:
+    if pred_year > 2021 and clk_ratio > 0:
         print('PREDICTION ACTIVE!')
-        new_doctors = pred_new_doctors(clk_ratio, pred_year, ms_value)
-        print(doctors_df)
+        # new_doctors = pred_new_doctors(clk_ratio, pred_year, ms_value)
+
+        new_doctors = pred_new_doctors_db(clk_ratio, pred_year, ms_value)
+
         doctors_df = pd.concat([doctors_df, new_doctors])
         doctors_df = doctors_df.groupby('district').sum().reset_index()
-        print(doctors_df)
 
     capacity = pd.merge(doctors_df, insurances_df, on='district')
     # in case doctors work work longer than fulltime
