@@ -49,13 +49,17 @@ def get_ws_probability():
 
 
 def get_districts_cnt(ws, ws_count, year):
+    if ws == 'stomatologie':
+        filt = DoctorsDistribution.working_specialty == ws
+    else:
+        filt = and_(DoctorsDistribution.graduated_year >= 2015,
+                    DoctorsDistribution.working_specialty == ws)
 
     doctors_distribution = db.session.query(
         DoctorsDistribution.district,
     ).distinct(DoctorsDistribution.doctor_id,
                DoctorsDistribution.working_specialty)\
-        .filter(and_(DoctorsDistribution.graduated_year >= 2015,
-                     DoctorsDistribution.working_specialty == ws))
+        .filter(filt)
 
     doctors_distribution = pd.DataFrame(doctors_distribution, columns=[
                                         'district'])
