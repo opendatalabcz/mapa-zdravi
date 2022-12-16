@@ -142,7 +142,7 @@ def pred_map(params):
     map_kwargs = {
         'legend_title': 'Čas výkonů / čas lékařů (v %)',
         'ratio_label': ' %',
-        'legend_ascending': False
+        'map_coloring': 'prediction_map'
     }
 
     if request.method == 'POST' and ms_value != 'všechny specializace' and not '--' in ms_value:

@@ -28,6 +28,19 @@
 
       <br />
 
+      <strong>Rok</strong>:
+      <input
+        type="range"
+        min="2020"
+        max="2026"
+        value="{{pred_year}}"
+        id="pred_year"
+        name="pred_year"
+        oninput="pred_year_out.value = pred_year.value"
+        onchange="this.form.submit()"
+      />
+      <output id="pred_year_out">{{pred_year}}</output>
+      <br />
       <strong>ČLK ratio</strong>*:
 
       <input
@@ -43,19 +56,6 @@
       <!-- class="slider" -->
       <output id="clk_ratio_out">{{clk_ratio/100}}</output>
 
-      <br />
-      <strong>Rok</strong>:
-      <input
-        type="range"
-        min="2020"
-        max="2026"
-        value="{{pred_year}}"
-        id="pred_year"
-        name="pred_year"
-        oninput="pred_year_out.value = pred_year.value"
-        onchange="this.form.submit()"
-      />
-      <output id="pred_year_out">{{pred_year}}</output>
       <br />
       <strong>Důchodový věk</strong>:
       <input
@@ -75,7 +75,7 @@
       <input
         type="range"
         min="30"
-        max="80"
+        max="100"
         value="{{hours_weekly}}"
         id="hours_weekly"
         name="hours_weekly"
@@ -110,7 +110,7 @@
   var normalized_names = {{normalized_names|safe}};
   var legend_title = JSON.parse('{{legend_title| tojson|safe}}');
   var map_title = {{map_title|tojson|safe}};
-  var legend_ascending = JSON.parse('{{legend_ascending| tojson|safe}}');
+  var map_coloring = JSON.parse('{{map_coloring| tojson|safe}}');
   var ratio_label = {{ratio_label|tojson|safe}};
 </script>
 

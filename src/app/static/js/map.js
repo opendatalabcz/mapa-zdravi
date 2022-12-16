@@ -1,6 +1,6 @@
 function getColor(d) {
     
-    if(legend_ascending === true){
+    if(map_coloring == 'capacity_map'){
         return d < legend_labels[0]  ? '#FF0000' :
         d < legend_labels[1]  ? '#FF4400' :
         d < legend_labels[2]  ? '#FF9900' :
@@ -10,9 +10,18 @@ function getColor(d) {
         d < legend_labels[6]  ? '#44FF00' :
         d >= legend_labels[6]  ? '#00FF00' :
                  '#d3d3d3'; //'#FFEDA0';
-
     }
-    else{
+    else if(map_coloring == 'prediction_map'){
+        return d > legend_labels[5]  ? '#FF0000' :
+        d > legend_labels[4]  ? '#FF4400' :
+        d > legend_labels[3]  ? '#FF9900' :
+        d > legend_labels[2]  ? '#FFDD00' :
+        d > legend_labels[1]  ? '#FFFF00' :
+        d > legend_labels[0]  ? '#99FF00' :
+        d <= legend_labels[0]  ? '#00FF00' :
+                '#d3d3d3';
+    } 
+    else if(map_coloring == 'age_map'){
         return d > legend_labels[4]  ? '#FF0000' :
         d > legend_labels[3]  ? '#FF4400' :
         d > legend_labels[2]  ? '#FF9900' :
@@ -20,7 +29,8 @@ function getColor(d) {
         d > legend_labels[0]  ? '#99FF00' :
         d <= legend_labels[0]  ? '#00FF00' :
                  '#d3d3d3'; //'#FFEDA0';
-    }                    
+    }
+
 }
 
 function getColorByName(n) {
@@ -128,7 +138,7 @@ legend.onAdd = function (map) {
     }
 
     div.innerHTML +=
-    '<i style="background:' + getColor(grades[grades.length-2]) + '"></i> > ' +
+    '<i style="background:' + getColor(grades[grades.length-2]+0.01) + '"></i> > ' +
     grades[grades.length-2] +'<br>';
 
 

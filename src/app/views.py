@@ -79,7 +79,7 @@ def home():
     map_kwargs = {
         'legend_title': 'Počet lékařů / 10 tis. obyv.',
         'ratio_label': ' / 10 000 obyvatel',
-        'legend_ascending': True
+        'map_coloring': 'capacity_map'
     }
 
     ms_value = request.form.get('medical_specialty')
@@ -133,7 +133,7 @@ def age_map():
         'map_title': 'Průměrný věk lékařů',
         'legend_title': 'Průměrný věk',
         'ratio_label': ' let',
-        'legend_ascending': False
+        'map_coloring': 'age_map'
     }
 
     # demographics query
