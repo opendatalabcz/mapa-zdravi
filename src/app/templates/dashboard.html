@@ -1,15 +1,14 @@
-{% extends "base.html" %} {% block title %}Lékaři - {% endblock %} {% block
+{% extends "base.html" %} {% block title %}Dashboard - {% endblock %} {% block
 content %}
 <div class="container">
   <div class="p-3">
     <h1>Dashboard</h1>
-    <div>
-      TBD.
-      <br />
-      Nothing to see here yet.
-      <br />
-      PowerBI dashboard belongs here.
-    </div>
+    Připravujeme.
+    <br />
+    <img
+      class="maintenance"
+      src="{{ url_for('static',filename='img/maintenance.png') }}"
+    />
   </div>
 </div>
 {% endblock %}

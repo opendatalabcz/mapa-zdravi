@@ -12,6 +12,17 @@ img.footer {
     max-height:50%;
   }
 
+  img.maintenance {
+    /* width:160px;
+    height:100px; */
+    max-width:50%;
+    max-height:50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+
 
 footer{
     margin-top: auto;

@@ -1,4 +1,4 @@
-console.log('I am running')
+// console.log('I am running')
 
 $(document).ready(function() {
     $( "#setHeight" ).on('load', function() { 
