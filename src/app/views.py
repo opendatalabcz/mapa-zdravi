@@ -3,17 +3,11 @@ from flask import Blueprint, render_template, request
 from sqlalchemy import func, distinct, and_, or_, not_
 
 from . import db
-from .models import DentistsAgeEstimate, Demographics, Students, NRPZS, Insurances, Doctors, MedicalSpecialty, InsurancesPrediction, DoctorsPrediction
+from .models import Doctors
 
-from .queries import get_districts_normalized, get_medical_specialty
+from .queries import get_districts_normalized, get_medical_specialty, get_clk_graduates, get_docs_cnt_range, get_student_citizenship
 
 import pandas as pd
-import random
-import re
-import unidecode
-from collections import Counter
-import math
-import numpy as np
 
 
 views = Blueprint('views', __name__)
@@ -168,27 +162,12 @@ def new_doctors():
     new_doctors_kwargs = {
     }
 
-    # doctors age query
-    doctor_cnt = db.session.query(
-        Doctors.graduated_year,
-        func.count(distinct(Doctors.doctor_id))
-    ).group_by(Doctors.graduated_year)\
-        .filter(and_(Doctors.graduated_year < 2022.,
-                     Doctors.graduated_year > 2011.))
+    new_docs_cnt = get_docs_cnt_range(year_from=2012, year_to=2021)
 
-    new_doctors_kwargs['new_doctors'] = list(dict(doctor_cnt).values())
-    new_doctors_kwargs['years'] = list(dict(doctor_cnt).keys())
+    new_doctors_kwargs['new_doctors'] = new_docs_cnt
+    new_doctors_kwargs['years'] = list(range(2012, 2022))
 
-    graduates_cnt = db.session.query(
-        Students.date_end,
-        func.count(distinct(Students.id))
-    ).group_by(Students.date_end)\
-        .filter(and_(Students.date_end < 2022.,
-                     Students.date_end > 2011.,
-                     Students.major == 'Všeobecné lékařství',
-                     Students.graduated == True,))
-
-    new_doctors_kwargs['graduates'] = list(dict(graduates_cnt).values())
+    new_doctors_kwargs['graduates'] = get_clk_graduates()
 
     return new_doctors_kwargs
 
@@ -197,29 +176,7 @@ def students():
     students_kwargs = {
     }
 
-    students = db.session.query(
-        Students.id,
-        Students.graduated,
-        Students.citizenship,
-        Students.date_end,
-    ).filter(and_(Students.date_end > 2011.,
-                  Students.citizenship.isnot(None),
-                  Students.citizenship != 'NaN',
-                  Students.date_end.isnot(None)))
-
-    students = pd.DataFrame(
-        students, columns=['_id', 'graduated', 'citizenship', 'date_end'])
-    students = students[~students.citizenship.isna()].drop_duplicates('_id')
-    # students.date_end = students.date_end.astype(int)
-    students.loc[~students.citizenship.isin(
-        ['CZE', 'SVK']), 'citizenship'] = 'Ostatní'
-
-    graduated = students[(students.graduated == True) & (
-        students.date_end < 2022) & (~students.citizenship.isna())
-    ].rename(columns={'graduated': 'count'})
-
-    graduated = graduated.groupby(['citizenship', 'date_end'])[
-        'count'].count().reset_index()
+    graduated = get_student_citizenship()
 
     students_kwargs['graduated_czechs'] = graduated[graduated.citizenship ==
                                                     'CZE']['count'].to_list()

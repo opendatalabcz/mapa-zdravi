@@ -113,3 +113,59 @@ def get_new_doctors_db(clk_ratio, pred_year, ms):
     new_doctors = pd.DataFrame(new_docs_query, columns=[
                                'district', 'new_doctors'])
     return new_doctors
+
+
+def get_clk_graduates():
+    graduates_cnt = db.session.query(
+        Students.date_end,
+        func.count(distinct(Students.id))
+    ).group_by(Students.date_end)\
+        .filter(and_(Students.date_end < 2022.,
+                     Students.date_end > 2011.,
+                     Students.major == 'Všeobecné lékařství',
+                     Students.graduated == True,))
+
+    grad_res = list(dict(graduates_cnt).values())
+    return grad_res
+
+
+def get_docs_cnt_range(year_from, year_to):
+    # doctors age query
+    doctor_cnt = db.session.query(
+        Doctors.graduated_year,
+        func.count(distinct(Doctors.doctor_id))
+    ).group_by(Doctors.graduated_year)\
+        .filter(and_(Doctors.graduated_year < 2022.,
+                     Doctors.graduated_year > 2011.))
+
+    doctor_cnt_list = list(dict(doctor_cnt).values())
+    return doctor_cnt_list
+
+
+def get_student_citizenship():
+    students = db.session.query(
+        Students.id,
+        Students.graduated,
+        Students.citizenship,
+        Students.date_end,
+    ).filter(and_(Students.date_end > 2011.,
+                  Students.citizenship.isnot(None),
+                  Students.citizenship != 'NaN',
+                  Students.date_end.isnot(None)))
+
+    students = pd.DataFrame(
+        students, columns=['_id', 'graduated', 'citizenship', 'date_end'])
+    students = students[~students.citizenship.isna()].drop_duplicates('_id')
+    # students.date_end = students.date_end.astype(int)
+    students.loc[~students.citizenship.isin(
+        ['CZE', 'SVK']), 'citizenship'] = 'Ostatní'
+
+    graduated = students[(students.graduated == True) & (
+        students.date_end < 2022) & (~students.citizenship.isna())
+    ].rename(columns={'graduated': 'count'})
+
+    graduated = graduated.groupby(['citizenship', 'date_end'])[
+        'count'].count().reset_index()
+
+    print(graduated)
+    return graduated
