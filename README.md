@@ -1,7 +1,7 @@
 # mapa-zdravi
 Aplikace predikující dostupnost zdravotnické péče v České republice na úrovni lékařských specializací.
 
-Projekt je tvořen jako diplomová práce 
+Projekt je vytvářen jako diplomová práce na Fakultě informačních technologií ve spolupráci s laboratoří OpenDataLab.
 
 Twitter: [Dostupnost lékařské péče v ČR](https://twitter.com/Lekari_v_CR)
 
