@@ -9,7 +9,7 @@ Twitter: [Dostupnost lékařské péče v ČR](https://twitter.com/Lekari_v_CR)
 
 ## Instalační instrukce
 
-0. Stáhnout [Docker](https://www.docker.com/)
+0. Stáhnout [Docker](https://www.docker.com/) a [PostgreSQL](https://www.postgresql.org/download/)
 1. Stáhnout projekt
 2. `cd src`
 3. `docker build -t mapa-zdravi .`
