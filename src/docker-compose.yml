@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=mapazdravi2022
+      - POSTGRES_USER=mapazdravi_user
+      - POSTGRES_DB=mapa_zdravi_web
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 54320:5432
+
+  mapa-zdravi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    links:
+      - db:db
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_PASSWORD=mapazdravi2022
+      - POSTGRES_USER=mapazdravi_user
+      - POSTGRES_DB=mapa_zdravi_web
+    ports:
+      - 3000:3000
