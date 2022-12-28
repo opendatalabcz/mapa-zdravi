@@ -10,7 +10,10 @@ services:
       - POSTGRES_DB=mapa_zdravi_web
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
-      - 54320:5432
+      - 5432:5432
+    volumes:
+      - ./db.bak:/tmp/db.bak
+    container_name: db
 
   mapa-zdravi:
     build:
@@ -26,3 +29,4 @@ services:
       - POSTGRES_DB=mapa_zdravi_web
     ports:
       - 3000:3000
+    container_name: web
