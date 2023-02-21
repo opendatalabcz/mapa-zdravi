@@ -1,32 +1,29 @@
 version: "3"
 
 services:
-  db:
-    image: postgres
+  mapa-zdravi-db:
+    image: postgres:15.2
     restart: always
     environment:
-      - POSTGRES_PASSWORD=mapazdravi2022
       - POSTGRES_USER=mapazdravi_user
       - POSTGRES_DB=mapa_zdravi_web
       - POSTGRES_HOST_AUTH_METHOD=trust
-    ports:
-      - 5432:5432
+    env_file: 
+      - .env
     volumes:
       - ./db.bak:/tmp/db.bak
-    container_name: db
 
-  mapa-zdravi:
+  mapa-zdravi-web:
     build:
       context: .
       dockerfile: Dockerfile
-    links:
-      - db:db
     depends_on:
-      - db
+      - mapa-zdravi-db
     environment:
-      - POSTGRES_PASSWORD=mapazdravi2022
       - POSTGRES_USER=mapazdravi_user
       - POSTGRES_DB=mapa_zdravi_web
+      - POSTGRES_HOST=mapa-zdravi-db
+    env_file: 
+      - .env
     ports:
       - 3000:3000
-    container_name: web

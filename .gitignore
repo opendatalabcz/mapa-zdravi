@@ -1,5 +1,6 @@
 data/
 doc/
+.env
 __pycache__/
 .ipynb_checkpoints/
 FITthesis-LaTeX-master/
