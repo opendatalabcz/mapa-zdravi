@@ -15,6 +15,14 @@ Autor: [Jan Garček](https://github.com/garcejan)
 0. Stáhnout [Docker](https://www.docker.com/)
 1. Stáhnout projekt
 2. `$ cd src`
+3. Vytvořit secrets
+```bash
+$ cat > .env <<EOF
+POSTGRES_PASSWORD=secret123
+SECRET_KEY=secret456
+EOF
+```
+
 3. `$ docker-compose up -d`
 4. `$ docker exec -i <db-container-id> pg_restore --no-owner --no-privileges -d mapa_zdravi_web -U mapazdravi_user < db.bak`
 5. Otevřít v prohlížeči: http://localhost:3000
