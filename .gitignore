@@ -4,3 +4,4 @@ doc/
 __pycache__/
 .ipynb_checkpoints/
 FITthesis-LaTeX-master/
+src/thesis/
