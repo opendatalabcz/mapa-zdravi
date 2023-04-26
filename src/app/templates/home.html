@@ -20,8 +20,10 @@
     <a href="/mapa">Mapa</a> zobrazuje predikci dostupnosti v závislosti na
     vybraných parametrech a v oddílu <a href="/statistiky">Statistiky</a> jsou k
     dispozici vizualizace vybraných dat použitých v tomto projektu.
+  </div>
 
-    </br></br>
+  <div class="container">
+
     <h3>
       Počet lékařů v jednotlivých krajích
     </h3>
@@ -47,13 +49,14 @@
         {% endfor %}
       </select>
     </form>
-  </div>
   <br />
   <div
     id="map"
     class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
   ></div>
-  <div class="p-3 container">
+</div>
+
+  <div class="container">
     <table class="table table-hover item-list table-striped">
       <thead class="thead-dark">
         <tr>
@@ -72,7 +75,9 @@
         {% endfor %}
       </tbody>
     </table>
-    <br />
+  </div>
+
+    <div class="container">
     <table class="table table-hover item-list table-striped">
       <thead class="thead-dark">
         <tr>

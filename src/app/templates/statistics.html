@@ -1,53 +1,67 @@
-{% extends "base.html" %} {% block head %}
+{% extends "base.html" %} 
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
-  integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
-  crossorigin=""
-/>
+{% block head %}
+<style>
 
+  /* Additional styles for this specific page */
+  #setHeight {
+    height: 500px;
+  }
+
+
+  #linechart,
+  #barchart {
+    height: 500px;
+  }
+  iframe {
+  width: 100%;
+  height: calc(100vh - 200px); /* subtracting the height of the header and the padding of the container */
+  
+}
+#map {
+  width: 100%;
+  height: calc(100vh - 200px);
+}
+
+</style>
+
+<!-- Leaflet CSS and ApexCharts script -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+{% endblock %}
 
-{% endblock %}{% block title %}Statistiky - {% endblock %} {% block content %}
-<div class="p-3">
+{% block title %}Statistiky - {% endblock %}
+
+{% block content %}
   <div class="container">
     <h1>Statistiky</h1>
-    <h3>Průměrný věk lékařů podle specializací</h3>
   </div>
-
-  <iframe
-    scrolling="no"
-    style="border: none"
-    src="{{url_for('static', filename='img/medical_specialty.html')}}"
-    width="100%"
-    id="setHeight"
-  >
-  </iframe>
-  <br />
+    <div class="container">
+      <h3>Průměrný věk lékařů podle specializací</h3>
+    <iframe
+      scrolling="no"
+      style="border: none"
+      src="{{url_for('static', filename='img/medical_specialty.html')}}"
+      id="setHeight"
+    ></iframe>  
+  </div>
   <div>
     <div class="container">
       <h3>Průměrný věk lékařů podle krajů</h3>
+      <div id="map" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"></div>
     </div>
-    <div
-      id="map"
-      class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
-    ></div>
   </div>
-  <br />
   <div class="container">
-    <h3>
-      Počet nových lékařů v ČLK a absolventů Všeobecného lékařství v
-      jednotlivých letech
-    </h3>
+    <h3>Počet nových lékařů v ČLK a absolventů Všeobecného lékařství v jednotlivých letech</h3>
     <div id="linechart"></div>
-    <br />
+  </div>
+  <div class="container">
     <h3>Složení absolventů podle roku absolvování</h3>
     <div id="barchart"></div>
-
-    <!-- <div id="boxplot"></div> -->
   </div>
-  {% endblock %} {% block scripts %}
+
+{% endblock %}
+{% block scripts %}
 
   <script
     type="text/javascript"

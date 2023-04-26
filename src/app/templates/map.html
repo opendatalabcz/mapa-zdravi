@@ -8,11 +8,16 @@
 />
 
 {% endblock %} {% block title %}Mapa - {% endblock %}{% block content %}
-<div class="p-3">
-  <div class="container" align="left">
-    <h1 align="left">Predikce dostupnosti lékařské péče</h1>
-    <form method="POST" action="/mapa" align="center">
-      <strong>Lékařská specializace:</strong>
+<div class="container">
+  <h1>Predikce dostupnosti lékařské péče</h1>
+</div>
+<div class="container">
+  <h3 >Mapa</h1>
+  <form method="POST" action="/mapa" class="form" align="center">
+    <div class="form-group">
+      <label for="medical_specialty"
+        ><strong>Lékařská specializace:</strong></label
+      >
       <select
         name="medical_specialty"
         id="medical_specialty"
@@ -25,11 +30,13 @@
         <option value="{{med_spec}}">{{med_spec}}</option>
         {% endif %} {% endfor %}
       </select>
-
-      <br />
-
-      <strong>Rok</strong>:
+    </div>
+    <div class="form-group">
+      <label for="pred_year" class="hovertext" data-hover="Predikce: 2022-2026"
+        ><strong>Rok:</strong></label
+      >
       <input
+        class="slider"
         type="range"
         min="2020"
         max="2026"
@@ -40,10 +47,18 @@
         onchange="this.form.submit()"
       />
       <output id="pred_year_out">{{pred_year}}</output>
-      <br />
-      <strong>ČLK ratio</strong>*:
+    </div>
 
+    <div class="form-group">
+      <label
+        for="clk_ratio"
+        class="hovertext"
+        data-hover="Poměr mezi lékaři zapsanými do ČLK/ČSK a absolventy lékařských fakult VŠ
+        v daném roce"
+        ><strong>ČLK ratio:</strong></label
+      >
       <input
+        class="slider"
         type="range"
         min="1"
         max="100"
@@ -53,12 +68,18 @@
         oninput="clk_ratio_out.value = clk_ratio.value/100"
         onchange="this.form.submit()"
       />
-      <!-- class="slider" -->
       <output id="clk_ratio_out">{{clk_ratio/100}}</output>
+    </div>
 
-      <br />
-      <strong>Důchodový věk</strong>:
+    <div class="form-group">
+      <label
+        for="senior_age"
+        class="hovertext"
+        data-hover="Věk odchodu lékařů do důchodu"
+        ><strong>Důchodový věk:</strong></label
+      >
       <input
+        class="slider"
         type="range"
         min="60"
         max="75"
@@ -69,10 +90,17 @@
         onchange="this.form.submit()"
       />
       <output id="senior_age_out">{{senior_age}} let</output>
-      <br />
+    </div>
 
-      <strong>Počet hodin</strong>:
+    <div class="form-group">
+      <label
+        for="hours_weekly"
+        class="hovertext"
+        data-hover="Počet pracovních hodin pro lékaře za týden"
+        ><strong>Počet hodin:</strong></label
+      >
       <input
+        class="slider"
         type="range"
         min="30"
         max="100"
@@ -83,20 +111,13 @@
         onchange="this.form.submit()"
       />
       <output id="hours_weekly_out">{{hours_weekly}}h týdně</output>
-      <br />
-    </form>
-  </div>
+    </div>
+  </form>
+  <br>
   <div
     id="map"
     class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-touch-zoom leaflet-gesture-handling"
   ></div>
-
-  <div class="container">
-    <i>
-      *Poměr mezi lékaři zapsanými do ČLK/ČSK a absolventy lékařských fakult VŠ
-      v daném roce.
-    </i>
-  </div>
 </div>
 {% endblock %} {% block scripts %}
 

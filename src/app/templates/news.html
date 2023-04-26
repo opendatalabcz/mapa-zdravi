@@ -1,13 +1,7 @@
-{% extends "base.html" %}{% block content %}
-<div class="p-3">
-  <div class="container">
-    <h1 align="left">Aktuality</h1>
-    Připravujeme.
-    <br />
-    <!-- <img
-      class="maintenance"
-      src="{{ url_for('static',filename='img/maintenance.png') }}"
-    /> -->
-  </div>
+{% extends "base.html" %} {% block head %} {% endblock %}{% block title
+%}Aktuality - {% endblock %} {% block content %}
+<div class="container">
+  <h1>Aktuality</h1>
+  <p class="message">Připravujeme.</p>
 </div>
 {% endblock %}
